@@ -1,0 +1,150 @@
+<html>
+  <head>
+    <META http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="topic-type" content="reference-adsk">
+    <meta name="helpsystempath" content="/view/NINVFUS/ENU/">
+    <link rel="canonical" href="http://help.autodesk.com/cloudhelp/ENU/Fusion-360-API/files/ValueInput.htm">
+    <meta name="product" content="NINVFUS">
+    <meta name="release" content="NA">
+    <meta name="book" content="Developer">
+    <meta name="component" content="Fusion-360-API">
+    <meta name="created" content="19/8/2014">
+    <meta name="user-comments" content="enable">
+    <meta name="description" content="ValueInput Object">
+    <meta name="topicid" content="GUID-bdeb52e0-a6af-4909-93e8-3b13acd0e39c">
+    <meta name="language" content="ENU">
+    <meta name="experiencelevel" content="expert">
+    <meta name="audience" content="programmer">
+    <title>ValueInput Object</title>
+    <link rel="stylesheet" type="text/css" href="../Style/APIHelp-chm.css">
+    <link rel="stylesheet" type="text/css" href="/view/clientframework/client.css"><script type="text/javascript" src="/view/clientframework/client.js"></script><script>
+          // This turns on the display of the copyright notice which is not visible by default.
+          // Because the head is removed when used in the web help, this function will only exists
+          // when the chm help is being created.
+          window.onload = function() {
+            copyrightElement = document.getElementById('CopyrightNotice');
+            copyrightElement.style.display = 'block';
+          };
+        </script></head>
+  <body>
+    <link rel="stylesheet" type="text/css" href="../Style/APIHelp.css">
+    <h1 class="api">ValueInput Object
+        </h1>
+              Derived from: <a href="Base.htm">Base</a> Object
+            <h2 class="api">
+          Description
+        </h2>A ValueInput provides a flexible way of specifying a string or a double. No semantics are associated with a ValueInput (e.g. is the string valid, can the string be converted to a double) - it is merely a way of supplying information in  either string OR double form as a function parameter.  ValueInput objects are typically used to specify things like an extrude depth, or hole dia, etc.<br /><br />Defined in namespace "adsk.core" and the header file is "Core/Application/ValueInput.h".<h2 class="api">
+            Methods
+          </h2>
+    <Table class="api-list">
+      <tr class="header">
+        <td class="api-list" style="width:1%;">
+                Name
+              </td>
+        <td class="api-list">
+                Description
+              </td>
+      </tr>
+      <tr>
+        <td class="api-list"><a href="ValueInput_classType.htm">classType</a></td>
+        <td class="api-list">Static function that all classes support that returns the type of the class as a string.  The returned string matches the string returned by the objectType property. For example if you have a reference to an object and you want to check if it's a SketchLine you can use myObject.objectType == fusion.SketchLine.classType().</td>
+      </tr>
+      <tr>
+        <td class="api-list"><a href="ValueInput_createByObject.htm">createByObject</a></td>
+        <td class="api-list">Creates a new ValueInput object that contains a reference to any Fusion 360 object.</td>
+      </tr>
+      <tr>
+        <td class="api-list"><a href="ValueInput_createByReal.htm">createByReal</a></td>
+        <td class="api-list">Creates a new ValueInput object using a double. For example, if you create a value using  the double value 2 and use it as input for a length, it will be interpreted as 2 cm because  centimeters are the internal unit for length. Values defined by a real are are always  interpreted to be in the appropriate internal unit.  For example, if the value 2 is used to define the depth of an extrusion (a length value),  it will be 2 cm because cm is the internal unit for lengths. If the value 2 is used  to define the angle of the extrude, it will be 2 radians because radians are the internal  unit for angles.</td>
+      </tr>
+      <tr>
+        <td class="api-list"><a href="ValueInput_createByString.htm">createByString</a></td>
+        <td class="api-list">When a string is used to create a value it needs to be evaluated as an expression so  its value can be determined using the UnitsManager class. The units of an expression can be explicitly defined or will default to the current default  units.  For example, if you create an expression with the string "6" and specify it as a length,  it will use the current active units. If the current active units are defined as inches  the expression will be interpreted as 6 inches.  You can specify the units as part of the string (i.e. "6 mm").  You can also use equations in the string (ie. "6 + 5mm") 
+ In order for an expression to be valid, its units must be compatible with the value it  represents. For example if you specify "5 in + 3 cm" as an expresssion to supply the value of an angle, it will fail because the units of the expression define a length.</td>
+      </tr>
+    </Table>
+    <h2 class="api">
+            Properties
+          </h2>
+    <Table class="api-list">
+      <tr class="header">
+        <td class="api-list" style="width:1%;">
+                Name
+              </td>
+        <td class="api-list">
+                Description
+              </td>
+      </tr>
+      <tr>
+        <td class="api-list"><a href="ValueInput_isValid.htm">isValid</a></td>
+        <td class="api-list">Indicates if this object is still valid, i.e. hasn't been deleted or some other action done to invalidate the reference.</td>
+      </tr>
+      <tr>
+        <td class="api-list"><a href="ValueInput_objectReference.htm">objectReference</a></td>
+        <td class="api-list">Gets the object being referenced, if there is one. Returns null AND GetLastError returns ValueNotOfType if there is no object reference. You can use the valueType property to determine which value type is currently used.</td>
+      </tr>
+      <tr>
+        <td class="api-list"><a href="ValueInput_objectType.htm">objectType</a></td>
+        <td class="api-list">Returns a string indicating the type of the object.</td>
+      </tr>
+      <tr>
+        <td class="api-list"><a href="ValueInput_realValue.htm">realValue</a></td>
+        <td class="api-list">Gets the real value, if there is one. Returns -1 AND GetLastError returns ValueNotOfType if there is no real value. You can use the valueType property to determine which value type is currently used.</td>
+      </tr>
+      <tr>
+        <td class="api-list"><a href="ValueInput_stringValue.htm">stringValue</a></td>
+        <td class="api-list">Gets the string value, if there is one. Returns an empty string AND GetLastError returns ValueNotOfType if there is no string value. You can use the valueType property to determine which value type is currently used.</td>
+      </tr>
+      <tr>
+        <td class="api-list"><a href="ValueInput_valueType.htm">valueType</a></td>
+        <td class="api-list">Returns the type of value this ValueInput currently represents.</td>
+      </tr>
+    </Table>
+    <h2 class="api">
+            Accessed From
+          </h2><a href="CircularPatternFeatureInput_quantity.htm">CircularPatternFeatureInput.quantity</a>, <a href="CircularPatternFeatureInput_totalAngle.htm">CircularPatternFeatureInput.totalAngle</a>, <a href="CoilFeatureInput_angle.htm">CoilFeatureInput.angle</a>, <a href="CoilFeatureInput_diameter.htm">CoilFeatureInput.diameter</a>, <a href="CoilFeatureInput_height.htm">CoilFeatureInput.height</a>, <a href="CoilFeatureInput_pitch.htm">CoilFeatureInput.pitch</a>, <a href="CoilFeatureInput_revolutions.htm">CoilFeatureInput.revolutions</a>, <a href="CoilFeatureInput_sectionSize.htm">CoilFeatureInput.sectionSize</a>, <a href="DraftFeatureInput_angleOne.htm">DraftFeatureInput.angleOne</a>, <a href="DraftFeatureInput_angleTwo.htm">DraftFeatureInput.angleTwo</a>, <a href="ExtendFeatureInput_distance.htm">ExtendFeatureInput.distance</a>, <a href="ExtrudeFeatureInput_taperAngleOne.htm">ExtrudeFeatureInput.taperAngleOne</a>, <a href="ExtrudeFeatureInput_taperAngleTwo.htm">ExtrudeFeatureInput.taperAngleTwo</a>, <a href="HoleFeatureInput_tipAngle.htm">HoleFeatureInput.tipAngle</a>, <a href="JointInput_angle.htm">JointInput.angle</a>, <a href="JointInput_offset.htm">JointInput.offset</a>, <a href="JointOriginInput_angle.htm">JointOriginInput.angle</a>, <a href="JointOriginInput_offsetX.htm">JointOriginInput.offsetX</a>, <a href="JointOriginInput_offsetY.htm">JointOriginInput.offsetY</a>, <a href="JointOriginInput_offsetZ.htm">JointOriginInput.offsetZ</a>, <a href="NamedValues_getByIndex.htm">NamedValues.getByIndex</a>, <a href="NamedValues_getValueByName.htm">NamedValues.getValueByName</a>, <a href="OffsetFeatureInput_distance.htm">OffsetFeatureInput.distance</a>, <a href="PathPatternFeatureInput_distance.htm">PathPatternFeatureInput.distance</a>, <a href="PathPatternFeatureInput_quantity.htm">PathPatternFeatureInput.quantity</a>, <a href="RectangularPatternFeatureInput_distanceOne.htm">RectangularPatternFeatureInput.distanceOne</a>, <a href="RectangularPatternFeatureInput_distanceTwo.htm">RectangularPatternFeatureInput.distanceTwo</a>, <a href="RectangularPatternFeatureInput_quantityOne.htm">RectangularPatternFeatureInput.quantityOne</a>, <a href="RectangularPatternFeatureInput_quantityTwo.htm">RectangularPatternFeatureInput.quantityTwo</a>, <a href="ScaleFeatureInput_scaleFactor.htm">ScaleFeatureInput.scaleFactor</a>, <a href="ScaleFeatureInput_xScale.htm">ScaleFeatureInput.xScale</a>, <a href="ScaleFeatureInput_yScale.htm">ScaleFeatureInput.yScale</a>, <a href="ScaleFeatureInput_zScale.htm">ScaleFeatureInput.zScale</a>, <a href="ShellFeatureInput_insideThickness.htm">ShellFeatureInput.insideThickness</a>, <a href="ShellFeatureInput_outsideThickness.htm">ShellFeatureInput.outsideThickness</a>, <a href="StitchFeatureInput_tolerance.htm">StitchFeatureInput.tolerance</a>, <a href="SweepFeatureInput_distanceOne.htm">SweepFeatureInput.distanceOne</a>, <a href="SweepFeatureInput_distanceTwo.htm">SweepFeatureInput.distanceTwo</a>, <a href="SweepFeatureInput_taperAngle.htm">SweepFeatureInput.taperAngle</a>, <a href="SweepFeatureInput_twistAngle.htm">SweepFeatureInput.twistAngle</a>, <a href="ThickenFeatureInput_thickness.htm">ThickenFeatureInput.thickness</a>, <a href="ThreadFeatureInput_threadLength.htm">ThreadFeatureInput.threadLength</a>, <a href="ThreadFeatureInput_threadOffset.htm">ThreadFeatureInput.threadOffset</a>, <a href="ValueInput_createByObject.htm">ValueInput.createByObject</a>, <a href="ValueInput_createByReal.htm">ValueInput.createByReal</a>, <a href="ValueInput_createByString.htm">ValueInput.createByString</a><h2 class="api">
+            Samples
+          </h2>
+    <Table class="api-list">
+      <tr class="header">
+        <td class="api-list">
+                Name
+              </td>
+        <td class="api-list">
+                Description
+              </td>
+      </tr>
+      <tr>
+        <td class="api-list"><a href="LoftFeatureSample_Sample.htm">Loft Feature API Sample</a></td>
+        <td class="api-list">Demonstrates creating a new loft feature.</td>
+      </tr>
+      <tr>
+        <td class="api-list"><a href="PatchFeatureSample_Sample.htm">Patch Feature API Sample</a></td>
+        <td class="api-list">Demonstrates creating a new patch feature.</td>
+      </tr>
+      <tr>
+        <td class="api-list"><a href="SimpleExtrusionSample_Sample.htm">Simple Extrusion Sample</a></td>
+        <td class="api-list">Creates a new extrusion feature, resulting in a new component.</td>
+      </tr>
+      <tr>
+        <td class="api-list"><a href="SimpleRevolveFeatureSample_Sample.htm">Simple Revolve Feature Sample</a></td>
+        <td class="api-list">Creates a new revolve feature, resulting in a new component.</td>
+      </tr>
+    </Table>
+    <h2 class="api">
+            Version
+          </h2>
+        Introduced in version August 2014<br><br><div id="CopyrightNotice" style="display:none;">
+      <hr>
+      <table width="100%" style="font-size:15">
+        <tr>
+          <td align="left">
+                © Copyright 2017 Autodesk, Inc.
+              </td>
+          <td align="right"><a href="mailto:mfg.api.help.comments@autodesk.com&subject=Fusion%20December 2017%20API%20Help%20(ValueInput%20Object%20Help%20Topic)">Comment on this page.</a></td>
+        </tr>
+      </table>
+    </div>
+  </body>
+</html>

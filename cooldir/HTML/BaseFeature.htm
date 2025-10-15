@@ -1,0 +1,197 @@
+<html>
+  <head>
+    <META http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="topic-type" content="reference-adsk">
+    <meta name="helpsystempath" content="/view/NINVFUS/ENU/">
+    <link rel="canonical" href="http://help.autodesk.com/cloudhelp/ENU/Fusion-360-API/files/BaseFeature.htm">
+    <meta name="product" content="NINVFUS">
+    <meta name="release" content="NA">
+    <meta name="book" content="Developer">
+    <meta name="component" content="Fusion-360-API">
+    <meta name="created" content="10/9/2015">
+    <meta name="user-comments" content="enable">
+    <meta name="description" content="BaseFeature Object">
+    <meta name="topicid" content="GUID-73BE9780-D085-42BB-85BD-92375C2DC8E3">
+    <meta name="language" content="ENU">
+    <meta name="experiencelevel" content="expert">
+    <meta name="audience" content="programmer">
+    <title>BaseFeature Object</title>
+    <link rel="stylesheet" type="text/css" href="../Style/APIHelp-chm.css">
+    <link rel="stylesheet" type="text/css" href="/view/clientframework/client.css"><script type="text/javascript" src="/view/clientframework/client.js"></script><script>
+          // This turns on the display of the copyright notice which is not visible by default.
+          // Because the head is removed when used in the web help, this function will only exists
+          // when the chm help is being created.
+          window.onload = function() {
+            copyrightElement = document.getElementById('CopyrightNotice');
+            copyrightElement.style.display = 'block';
+          };
+        </script></head>
+  <body>
+    <link rel="stylesheet" type="text/css" href="../Style/APIHelp.css">
+    <h1 class="api">BaseFeature Object
+        </h1>
+              Derived from: <a href="Feature.htm">Feature</a> Object
+            <h2 class="api">
+          Description
+        </h2>The BaseFeature class represents a direct edit feature within a parametric design.<br /><br />Defined in namespace "adsk.fusion" and the header file is "Fusion/Features/BaseFeature.h".<h2 class="api">
+            Methods
+          </h2>
+    <Table class="api-list">
+      <tr class="header">
+        <td class="api-list" style="width:1%;">
+                Name
+              </td>
+        <td class="api-list">
+                Description
+              </td>
+      </tr>
+      <tr>
+        <td class="api-list"><a href="BaseFeature_classType.htm">classType</a></td>
+        <td class="api-list">Static function that all classes support that returns the type of the class as a string.  The returned string matches the string returned by the objectType property. For example if you have a reference to an object and you want to check if it's a SketchLine you can use myObject.objectType == fusion.SketchLine.classType().</td>
+      </tr>
+      <tr>
+        <td class="api-list"><a href="BaseFeature_deleteMe.htm">deleteMe</a></td>
+        <td class="api-list">Deletes the feature. This works for both parametric and non-parametric features.</td>
+      </tr>
+      <tr>
+        <td class="api-list"><a href="BaseFeature_dissolve.htm">dissolve</a></td>
+        <td class="api-list">Dissolves the feature so that the feature information is lost and only the B-Rep geometry defined by the feature remains. This is only valid for non-parametric features.</td>
+      </tr>
+      <tr>
+        <td class="api-list"><a href="BaseFeature_finishEdit.htm">finishEdit</a></td>
+        <td class="api-list">Exits from edit mode in the user-interface. If this base feature in not in edit mode, then nothing happens.</td>
+      </tr>
+      <tr>
+        <td class="api-list"><a href="BaseFeature_startEdit.htm">startEdit</a></td>
+        <td class="api-list">Set the user-interface so that the base body is in edit mode.</td>
+      </tr>
+    </Table>
+    <h2 class="api">
+            Properties
+          </h2>
+    <Table class="api-list">
+      <tr class="header">
+        <td class="api-list" style="width:1%;">
+                Name
+              </td>
+        <td class="api-list">
+                Description
+              </td>
+      </tr>
+      <tr>
+        <td class="api-list"><a href="BaseFeature_assemblyContext.htm">assemblyContext</a></td>
+        <td class="api-list">Returns the assembly occurrence (i.e. the occurrence) of this object in an assembly. This is only valid in the case where this is acting as a proxy in an assembly. Returns null in the case where the object is not in the context of an assembly but is already the native object.</td>
+      </tr>
+      <tr>
+        <td class="api-list"><a href="BaseFeature_attributes.htm">attributes</a></td>
+        <td class="api-list">Returns the collection of attributes associated with this face.</td>
+      </tr>
+      <tr>
+        <td class="api-list"><a href="BaseFeature_baseFeature.htm">baseFeature</a></td>
+        <td class="api-list">If this feature is associated with a base feature, this property will return that base feature. If it's not associated with a base feature, this property will return null.</td>
+      </tr>
+      <tr>
+        <td class="api-list"><a href="BaseFeature_bodies.htm">bodies</a></td>
+        <td class="api-list">Returns the bodies that were modified or created by this feature.  This works for both parametric and non-parametric features. For a BaseFeature this returns the bodies that are owned by the base feature.</td>
+      </tr>
+      <tr>
+        <td class="api-list"><a href="BaseFeature_constructionAxes.htm">constructionAxes</a></td>
+        <td class="api-list">Returns an array of the construction axes associated with this base feature.</td>
+      </tr>
+      <tr>
+        <td class="api-list"><a href="BaseFeature_constructionPlanes.htm">constructionPlanes</a></td>
+        <td class="api-list">Returns an array of the construction planes associated with this base feature.</td>
+      </tr>
+      <tr>
+        <td class="api-list"><a href="BaseFeature_constructionPoints.htm">constructionPoints</a></td>
+        <td class="api-list">Returns an array of the construction points associated with this base feature.</td>
+      </tr>
+      <tr>
+        <td class="api-list"><a href="BaseFeature_errorOrWarningMessage.htm">errorOrWarningMessage</a></td>
+        <td class="api-list">Returns the error or warning message in the case where the healthState property returns either WarningFeatureHealthState or ErrorFeatureHealthState. Otherwise this property returns an empty string.</td>
+      </tr>
+      <tr>
+        <td class="api-list"><a href="BaseFeature_faces.htm">faces</a></td>
+        <td class="api-list">Returns the faces that were created by this feature.  This works for both parametric and non-parametric features.</td>
+      </tr>
+      <tr>
+        <td class="api-list"><a href="BaseFeature_healthState.htm">healthState</a></td>
+        <td class="api-list">Returns the current health state of the feature.</td>
+      </tr>
+      <tr>
+        <td class="api-list"><a href="BaseFeature_isParametric.htm">isParametric</a></td>
+        <td class="api-list">Indicates if this feature is parametric or not.</td>
+      </tr>
+      <tr>
+        <td class="api-list"><a href="BaseFeature_isSuppressed.htm">isSuppressed</a></td>
+        <td class="api-list">Gets and sets if this feature is suppressed. This is only valid for parametric features.</td>
+      </tr>
+      <tr>
+        <td class="api-list"><a href="BaseFeature_isValid.htm">isValid</a></td>
+        <td class="api-list">Indicates if this object is still valid, i.e. hasn't been deleted or some other action done to invalidate the reference.</td>
+      </tr>
+      <tr>
+        <td class="api-list"><a href="BaseFeature_linkedFeatures.htm">linkedFeatures</a></td>
+        <td class="api-list">Returns the set of features that are linked to this feature. The set of linked features are all of the features that were created in various components as the result of a  single feature being created in the user interface.</td>
+      </tr>
+      <tr>
+        <td class="api-list"><a href="BaseFeature_meshBodies.htm">meshBodies</a></td>
+        <td class="api-list">Returns an array of the mesh bodies associated with this base feature.</td>
+      </tr>
+      <tr>
+        <td class="api-list"><a href="BaseFeature_name.htm">name</a></td>
+        <td class="api-list">Returns the name of the feature as seen in the browser (non-parametric) or in the timeline (parametric).</td>
+      </tr>
+      <tr>
+        <td class="api-list"><a href="BaseFeature_objectType.htm">objectType</a></td>
+        <td class="api-list">Returns a string indicating the type of the object.</td>
+      </tr>
+      <tr>
+        <td class="api-list"><a href="BaseFeature_parentComponent.htm">parentComponent</a></td>
+        <td class="api-list">Returns the parent component that owns this feature.</td>
+      </tr>
+      <tr>
+        <td class="api-list"><a href="BaseFeature_sketches.htm">sketches</a></td>
+        <td class="api-list">Returns an array of the sketches associated with this base feature.</td>
+      </tr>
+      <tr>
+        <td class="api-list"><a href="BaseFeature_timelineObject.htm">timelineObject</a></td>
+        <td class="api-list">Returns the timeline object associated with this feature.</td>
+      </tr>
+    </Table>
+    <h2 class="api">
+            Accessed From
+          </h2><a href="BaseFeature_baseFeature.htm">BaseFeature.baseFeature</a>, <a href="BaseFeatures_add.htm">BaseFeatures.add</a>, <a href="BaseFeatures_item.htm">BaseFeatures.item</a>, <a href="BaseFeatures_itemByName.htm">BaseFeatures.itemByName</a>, <a href="BoundaryFillFeature_baseFeature.htm">BoundaryFillFeature.baseFeature</a>, <a href="BoundaryFillFeatureInput_targetBaseFeature.htm">BoundaryFillFeatureInput.targetBaseFeature</a>, <a href="BoxFeature_baseFeature.htm">BoxFeature.baseFeature</a>, <a href="BRepBody_baseFeature.htm">BRepBody.baseFeature</a>, <a href="ChamferFeature_baseFeature.htm">ChamferFeature.baseFeature</a>, <a href="ChamferFeatureInput_targetBaseFeature.htm">ChamferFeatureInput.targetBaseFeature</a>, <a href="CircularPatternFeature_baseFeature.htm">CircularPatternFeature.baseFeature</a>, <a href="CircularPatternFeatureInput_targetBaseFeature.htm">CircularPatternFeatureInput.targetBaseFeature</a>, <a href="CoilFeature_baseFeature.htm">CoilFeature.baseFeature</a>, <a href="CoilFeatureInput_targetBaseFeature.htm">CoilFeatureInput.targetBaseFeature</a>, <a href="CombineFeature_baseFeature.htm">CombineFeature.baseFeature</a>, <a href="CombineFeatureInput_targetBaseFeature.htm">CombineFeatureInput.targetBaseFeature</a>, <a href="ConstructionAxis_baseFeature.htm">ConstructionAxis.baseFeature</a>, <a href="ConstructionPlane_baseFeature.htm">ConstructionPlane.baseFeature</a>, <a href="ConstructionPoint_baseFeature.htm">ConstructionPoint.baseFeature</a>, <a href="CopyPasteBody_baseFeature.htm">CopyPasteBody.baseFeature</a>, <a href="CutPasteBody_baseFeature.htm">CutPasteBody.baseFeature</a>, <a href="CylinderFeature_baseFeature.htm">CylinderFeature.baseFeature</a>, <a href="DeleteFaceFeature_baseFeature.htm">DeleteFaceFeature.baseFeature</a>, <a href="DraftFeature_baseFeature.htm">DraftFeature.baseFeature</a>, <a href="DraftFeatureInput_targetBaseFeature.htm">DraftFeatureInput.targetBaseFeature</a>, <a href="ExtendFeature_baseFeature.htm">ExtendFeature.baseFeature</a>, <a href="ExtendFeatureInput_targetBaseFeature.htm">ExtendFeatureInput.targetBaseFeature</a>, <a href="ExtrudeFeature_baseFeature.htm">ExtrudeFeature.baseFeature</a>, <a href="ExtrudeFeatureInput_targetBaseFeature.htm">ExtrudeFeatureInput.targetBaseFeature</a>, <a href="Feature_baseFeature.htm">Feature.baseFeature</a>, <a href="FilletFeature_baseFeature.htm">FilletFeature.baseFeature</a>, <a href="FilletFeatureInput_targetBaseFeature.htm">FilletFeatureInput.targetBaseFeature</a>, <a href="FormFeature_baseFeature.htm">FormFeature.baseFeature</a>, <a href="HoleFeature_baseFeature.htm">HoleFeature.baseFeature</a>, <a href="HoleFeatureInput_targetBaseFeature.htm">HoleFeatureInput.targetBaseFeature</a>, <a href="LoftFeature_baseFeature.htm">LoftFeature.baseFeature</a>, <a href="LoftFeatureInput_targetBaseFeature.htm">LoftFeatureInput.targetBaseFeature</a>, <a href="MirrorFeature_baseFeature.htm">MirrorFeature.baseFeature</a>, <a href="MirrorFeatureInput_targetBaseFeature.htm">MirrorFeatureInput.targetBaseFeature</a>, <a href="MoveFeature_baseFeature.htm">MoveFeature.baseFeature</a>, <a href="MoveFeatureInput_targetBaseFeature.htm">MoveFeatureInput.targetBaseFeature</a>, <a href="OffsetFacesFeature_baseFeature.htm">OffsetFacesFeature.baseFeature</a>, <a href="OffsetFeature_baseFeature.htm">OffsetFeature.baseFeature</a>, <a href="OffsetFeatureInput_targetBaseFeature.htm">OffsetFeatureInput.targetBaseFeature</a>, <a href="PatchFeature_baseFeature.htm">PatchFeature.baseFeature</a>, <a href="PatchFeatureInput_targetBaseFeature.htm">PatchFeatureInput.targetBaseFeature</a>, <a href="PathPatternFeature_baseFeature.htm">PathPatternFeature.baseFeature</a>, <a href="PathPatternFeatureInput_targetBaseFeature.htm">PathPatternFeatureInput.targetBaseFeature</a>, <a href="PipeFeature_baseFeature.htm">PipeFeature.baseFeature</a>, <a href="RectangularPatternFeature_baseFeature.htm">RectangularPatternFeature.baseFeature</a>, <a href="RectangularPatternFeatureInput_targetBaseFeature.htm">RectangularPatternFeatureInput.targetBaseFeature</a>, <a href="RemoveFeature_baseFeature.htm">RemoveFeature.baseFeature</a>, <a href="ReplaceFaceFeature_baseFeature.htm">ReplaceFaceFeature.baseFeature</a>, <a href="ReplaceFaceFeatureInput_targetBaseFeature.htm">ReplaceFaceFeatureInput.targetBaseFeature</a>, <a href="ReverseNormalFeature_baseFeature.htm">ReverseNormalFeature.baseFeature</a>, <a href="RevolveFeature_baseFeature.htm">RevolveFeature.baseFeature</a>, <a href="RevolveFeatureInput_targetBaseFeature.htm">RevolveFeatureInput.targetBaseFeature</a>, <a href="RibFeature_baseFeature.htm">RibFeature.baseFeature</a>, <a href="RuleFilletFeature_baseFeature.htm">RuleFilletFeature.baseFeature</a>, <a href="ScaleFeature_baseFeature.htm">ScaleFeature.baseFeature</a>, <a href="ScaleFeatureInput_targetBaseFeature.htm">ScaleFeatureInput.targetBaseFeature</a>, <a href="ShellFeature_baseFeature.htm">ShellFeature.baseFeature</a>, <a href="ShellFeatureInput_targetBaseFeature.htm">ShellFeatureInput.targetBaseFeature</a>, <a href="SilhouetteSplitFeature_baseFeature.htm">SilhouetteSplitFeature.baseFeature</a>, <a href="SilhouetteSplitFeatureInput_targetBaseFeature.htm">SilhouetteSplitFeatureInput.targetBaseFeature</a>, <a href="SphereFeature_baseFeature.htm">SphereFeature.baseFeature</a>, <a href="SplitBodyFeature_baseFeature.htm">SplitBodyFeature.baseFeature</a>, <a href="SplitBodyFeatureInput_targetBaseFeature.htm">SplitBodyFeatureInput.targetBaseFeature</a>, <a href="SplitFaceFeature_baseFeature.htm">SplitFaceFeature.baseFeature</a>, <a href="SplitFaceFeatureInput_targetBaseFeature.htm">SplitFaceFeatureInput.targetBaseFeature</a>, <a href="StitchFeature_baseFeature.htm">StitchFeature.baseFeature</a>, <a href="StitchFeatureInput_targetBaseFeature.htm">StitchFeatureInput.targetBaseFeature</a>, <a href="SurfaceDeleteFaceFeature_baseFeature.htm">SurfaceDeleteFaceFeature.baseFeature</a>, <a href="SweepFeature_baseFeature.htm">SweepFeature.baseFeature</a>, <a href="SweepFeatureInput_targetBaseFeature.htm">SweepFeatureInput.targetBaseFeature</a>, <a href="ThickenFeature_baseFeature.htm">ThickenFeature.baseFeature</a>, <a href="ThickenFeatureInput_targetBaseFeature.htm">ThickenFeatureInput.targetBaseFeature</a>, <a href="ThreadFeature_baseFeature.htm">ThreadFeature.baseFeature</a>, <a href="ThreadFeatureInput_targetBaseFeature.htm">ThreadFeatureInput.targetBaseFeature</a>, <a href="TorusFeature_baseFeature.htm">TorusFeature.baseFeature</a>, <a href="TrimFeature_baseFeature.htm">TrimFeature.baseFeature</a>, <a href="TrimFeatureInput_targetBaseFeature.htm">TrimFeatureInput.targetBaseFeature</a>, <a href="UnstitchFeature_baseFeature.htm">UnstitchFeature.baseFeature</a>, <a href="WebFeature_baseFeature.htm">WebFeature.baseFeature</a><h2 class="api">
+            Samples
+          </h2>
+    <Table class="api-list">
+      <tr class="header">
+        <td class="api-list">
+                Name
+              </td>
+        <td class="api-list">
+                Description
+              </td>
+      </tr>
+      <tr>
+        <td class="api-list"><a href="BaseFeatureSample_Sample.htm">BaseFeature Sample</a></td>
+        <td class="api-list">Creates a new base feature.</td>
+      </tr>
+    </Table>
+    <h2 class="api">
+            Version
+          </h2>
+        Introduced in version September 2015<br><br><div id="CopyrightNotice" style="display:none;">
+      <hr>
+      <table width="100%" style="font-size:15">
+        <tr>
+          <td align="left">
+                © Copyright 2017 Autodesk, Inc.
+              </td>
+          <td align="right"><a href="mailto:mfg.api.help.comments@autodesk.com&subject=Fusion%20December 2017%20API%20Help%20(BaseFeature%20Object%20Help%20Topic)">Comment on this page.</a></td>
+        </tr>
+      </table>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,240 @@
+<html>
+  <head>
+    <META http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="topic-type" content="reference-adsk">
+    <meta name="helpsystempath" content="/view/NINVFUS/ENU/">
+    <link rel="canonical" href="http://help.autodesk.com/cloudhelp/ENU/Fusion-360-API/files/WhatsNew.htm">
+    <meta name="product" content="NINVFUS">
+    <meta name="release" content="NA">
+    <meta name="book" content="Developer">
+    <meta name="component" content="Fusion-360-API">
+    <meta name="created" content="29/11/2017">
+    <meta name="user-comments" content="enable">
+    <meta name="description" content="">
+    <meta name="topicid" content="GUID-36B1FFB5-5291-4532-8F11-90E912769B34">
+    <meta name="experiencelevel" content="expert">
+    <meta name="audience" content="programmer">
+    <meta name="language" content="ENU">
+    <title>
+          What's New
+        </title>
+    <link rel="stylesheet" type="text/css" href="../Style/APIHelp-chm.css">
+    <link rel="stylesheet" type="text/css" href="/view/clientframework/client.css"><script type="text/javascript" src="/view/clientframework/client.js"></script><script>
+          // This turns on the display of the copyright notice which is not visible by default.
+          // Because the head is removed when used in the web help, this function will only exists
+          // when the chm help is being created.
+          window.onload = function() {
+          copyrightElement = document.getElementById('CopyrightNotice');
+          copyrightElement.style.display = 'block';
+          };
+        </script></head>
+  <body>
+    <link rel="stylesheet" type="text/css" href="../Style/APIHelp.css">
+    <div class="body">
+      <h1 class="api">
+          What's New
+        </h1><h3 class="api">Measure</h3>
+<p class="api">This update includes the ability to do the same kinds of measurements in the API that you're able to do in the user-interface with the Measure command.  The new MeasureManager object provides access to the new functionality. There's a new <a href="http://help.autodesk.com/view/fusion360/ENU/?guid=GUID-4b13c86c-7aa0-4555-b3e3-02f7d1b01d10">sample program</a> that demonstrates much of the functionality. </p>
+
+<h3 class="api">Temporary B-Rep Construction</h3>
+
+<p class="api">
+A completely new type of functionality has been added to allow you to do some basic solid modeling outside of any Fusion 360 documents. Some of the things supported are the creation of primitive solid shapes, Boolean operations, silhouette curves, intersection curves, various ways of creating wireframe geometry, imprinting of bodies, and reading and writing files containing the geometry descriptions. This is a direct interface to the internal modeling engine that Fusion 360 uses. Creating shapes this way is much faster because there’s no additional overhead of features, timeline, or even graphics. See the <a href="http://help.autodesk.com/view/fusion360/ENU/?guid=GUID-2CA08FA9-8C23-4449-87C4-1CCBA87941C1">TemporaryBRepManager</a> object in the API help.
+</p>
+
+<h3 class="api">Other</h3>
+
+<p class="api">The API now supports the twist and taper angle options of the sweep feature.</p>
+
+<p class="api">There are now events fired when the user manipulates the view and changes the camera.  See the Application.cameraChanged event.</p>
+
+<h3 class="api">Fixes</h3>
+<ol>
+<li><p class="api">eric <a href="https://forums.autodesk.com/t5/fusion-360-api-and-scripts/api-won-t-delete-sketchtext/td-p/7478981">reported a problem</a> where sketch text couldn't be deleted using the API. This has now been fixed.</p>
+</li>
+
+<li><p class="api">rgoulden <a href="https://forums.autodesk.com/t5/fusion-360-api-and-scripts/multiple-issues-with-as-built-joint-apis/td-p/7444007">reported a problem</a> with as-built joints and we've fixed it.</p>
+</li>
+
+<li><p class="api">sirusdv <a href="https://forums.autodesk.com/t5/fusion-360-api-and-scripts/projecting-a-face-on-to-sketch-comes-in-inverted/m-p/7408025#M4721">reported a problem</a> with projecting a face onto a sketch. This has now been fixed.</p>
+</li>
+
+<li><p class="api">ross.korsky <a href="https://forums.autodesk.com/t5/fusion-360-api-and-scripts/moving-text-within-a-sketch-breaks-the-world/td-p/7386343">reported a problem</a> setting the position of sketch text. This has now been fixed.</p>
+</li>
+
+<li><p class="api">JBTechLab <a href="https://forums.autodesk.com/t5/fusion-360-api-and-scripts/materials-itembyname-should-return-quot-null-quot-but-it-doesn-t/td-p/7383632">reported a problem</a> with the Materials.itemByName method.  We've fixed it.</p>
+</li>
+
+<li><p class="api">asheepcalledgeorge  <a href="https://forums.autodesk.com/t5/fusion-360-api-and-scripts/strange-sketch-copy-move-behaviour/m-p/7331814#M4419">reported a problem</a> with transformating entities within a sketch. This has now been fixed.</p>
+</li>
+
+<li><p class="api">BlackPrism  <a href="https://forums.autodesk.com/t5/fusion-360-api-and-scripts/positioning-manipulator/td-p/7282034">reported a problem</a> with the axes being returned by a joint origin. It's now fixed.</p>
+</li>
+
+</ol>
+
+<p class="api">The specific enhancements to the Fusion 360 API are listed below.</p><h2 class="api">
+          New Objects
+        </h2>
+      <Table class="api-list">
+        <tr class="header">
+          <td class="api-list" style="width:1%;">
+              Name
+            </td>
+          <td class="api-list">
+              Description
+            </td>
+        </tr>
+        <tr>
+          <td class="api-list"><a href="BRepWire.htm">BRepWire</a></td>
+          <td class="api-list">Represents a single B-Rep wire body. A wire body consists of one or  more edges and their vertices.</td>
+        </tr>
+        <tr>
+          <td class="api-list"><a href="BRepWires.htm">BRepWires</a></td>
+          <td class="api-list">Provides access to B-Rep wire bodies.</td>
+        </tr>
+        <tr>
+          <td class="api-list"><a href="CameraEvent.htm">CameraEvent</a></td>
+          <td class="api-list">A CameraEvent represents an event that occurs in reaction to the user manipulating the view. Camera changes happen when user changes the view by rotating, zooming in or out, panning,  changing from parallel to perspective, or when the extents of the viewport changes.</td>
+        </tr>
+        <tr>
+          <td class="api-list"><a href="CameraEventArgs.htm">CameraEventArgs</a></td>
+          <td class="api-list">The CameraEventArgs provides information associated with a camera change. Camera changes happen when user changes the view by rotating, zooming in or out, panning,  changing from parallel to perspective, or when the extents of the viewport changes.</td>
+        </tr>
+        <tr>
+          <td class="api-list"><a href="CameraEventHandler.htm">CameraEventHandler</a></td>
+          <td class="api-list">The CameraEventHandler is a client implemented class that can be added as a handler to an CameraEvent.</td>
+        </tr>
+        <tr>
+          <td class="api-list"><a href="MeasureManager.htm">MeasureManager</a></td>
+          <td class="api-list">The MeasurementManager class provides some generic measurement utilities that can be used for most entity types.</td>
+        </tr>
+        <tr>
+          <td class="api-list"><a href="MeasureResults.htm">MeasureResults</a></td>
+          <td class="api-list"></td>
+        </tr>
+        <tr>
+          <td class="api-list"><a href="OrientedBoundingBox3D.htm">OrientedBoundingBox3D</a></td>
+          <td class="api-list">Transient object that represents an oriented 3D bounding box. An oriented 3D bounding box is a rectangular box that can be in any orientation in model space. They are created statically using the create method of the OrientedBoundingBox3D class and are used by some functions to return oriented box information.</td>
+        </tr>
+        <tr>
+          <td class="api-list"><a href="TemporaryBRepManager.htm">TemporaryBRepManager</a></td>
+          <td class="api-list">A utility object that provides functionality to create and manipulate B-Rep data outside the context of a document. The provides direct access to the modeling core without the overhead of parametrics, persistence, transactions, or graphics. It also provides a way of directly defining and creating B-Rep data.</td>
+        </tr>
+      </Table>
+      <h2 class="api">
+          New Methods, Properties and Events
+        </h2>
+      <Table class="api-list">
+        <tr class="header">
+          <td class="api-list" style="width:1%;">
+              Name
+            </td>
+          <td class="api-list">
+              Description
+            </td>
+        </tr>
+        <tr>
+          <td class="api-list"><a href="Application_cameraChanged.htm">Application.cameraChanged</a></td>
+          <td class="api-list">The cameraChanged event fires immediately after a change in the camera has been made. Camera changes happen when user changes the view by rotating, zooming in or out, panning,  changing from parallel to perspective, or when the extents of the viewport changes.
+ You can add or remove event handlers from the CameraEvent.</td>
+        </tr>
+        <tr>
+          <td class="api-list"><a href="Application_measureManager.htm">Application.measureManager</a></td>
+          <td class="api-list">Get the MeasureManager object which can be used to perform measurements of geometry.</td>
+        </tr>
+        <tr>
+          <td class="api-list"><a href="BRepBody_isTemporary.htm">BRepBody.isTemporary</a></td>
+          <td class="api-list">Indicates if this body is represented in the model or is temporary.</td>
+        </tr>
+        <tr>
+          <td class="api-list"><a href="BRepBody_wires.htm">BRepBody.wires</a></td>
+          <td class="api-list">Returns any wire bodies that exist within this body.</td>
+        </tr>
+        <tr>
+          <td class="api-list"><a href="BRepShell_wire.htm">BRepShell.wire</a></td>
+          <td class="api-list">Returns the wire body, if any, that exists in this shell. Returns null if the shell doesn't have a wire body.</td>
+        </tr>
+        <tr>
+          <td class="api-list"><a href="Command_isPositionDependent.htm">Command.isPositionDependent</a></td>
+          <td class="api-list">When working in a parametric design in Fusion and you move any occurrences, those move operations are pending and aren't captured until you use the "Capture Position" command from the POSITION panel or use the "Revert" command from the same panel to move them all back to their original positions. If the design is in a pending situation and you run a command like "Create Sketch", a dialog appears asking if you want to capture the current position or not before continuing. This is because the creation of a sketch can be dependent on the current positions of occurrences in the design. Other comamnds, like "Fillet", depend directly on model geometry and do not rely on occurrence positions so running the Fillet command does not display the dialog and does not affect the pending state of the occurrences.
+ This property allows you to specify if your command is dependent on the current position of occurrences or not. One good way to know if your command is dependent or not is to run the commands in the UI that are  equivalent to the API functions you're using and see if the dialog that prompts to save or abort appears.  If it does, then you know your command is dependent on occurrence positions.
+ If this property is true, then the dialog will appear if there are any pending moved occurrences. The user can choose whether to capture the current changes or abort them, and then your command will continue.
+ If you set this property to false, (which is the default), then even if there are pending changes, the occurrences  are left in their current positions and your command will run.</td>
+        </tr>
+        <tr>
+          <td class="api-list"><a href="CustomGraphicsBRepBody_edges.htm">CustomGraphicsBRepBody.edges</a></td>
+          <td class="api-list">Returns the collection of CustomGraphicsBRepEdge objects in the CustomGraphicsBRepBody.</td>
+        </tr>
+        <tr>
+          <td class="api-list"><a href="CustomGraphicsBRepBody_faces.htm">CustomGraphicsBRepBody.faces</a></td>
+          <td class="api-list">Returns the collection of CustomGraphicsBRepFace objects in the CustomGraphicsBRepBody.</td>
+        </tr>
+        <tr>
+          <td class="api-list"><a href="CustomGraphicsBRepBody_vertices.htm">CustomGraphicsBRepBody.vertices</a></td>
+          <td class="api-list">Returns the collection of CustomGraphicsBRepVertex objects in the CustomGraphicsBRepBody.</td>
+        </tr>
+        <tr>
+          <td class="api-list"><a href="MeshBody_opacity.htm">MeshBody.opacity</a></td>
+          <td class="api-list">Gets and sets the opacity override assigned to this body. A value of 1.0 specifies that is it completely opaque and a value of 0.0 specifies that is it completely transparent.
+ This value is not necessarily related to what the user sees because the opacity is inherited. For example, if you this body is in a component and that component's opacity is set to something other than 1.0, the body will also be shown as slightly transparent even though the opacity  property for the body will return 1.0. Because the component that contains the body can be  referenced as an occurrence in other components and they can have different opacity settings,  it's possible that different instances of the same body can display using different opacity levels.  To get the opacity that it is being displayed with use the MeshBody.visibleOpacity property.
+ This is the API equivalent of the "Opacity Control" command available for the body in the browser.</td>
+        </tr>
+        <tr>
+          <td class="api-list"><a href="MeshBody_visibleOpacity.htm">MeshBody.visibleOpacity</a></td>
+          <td class="api-list">The user can set an override opacity for components and bodies these opacity overrides combine if children and parent components have overrides. This property returns the actual opacity that is being used to render the body. To set the opacity use the opacity property of the MeshBody object.</td>
+        </tr>
+        <tr>
+          <td class="api-list"><a href="Point2D_isEqualToByTolerance.htm">Point2D.isEqualToByTolerance</a></td>
+          <td class="api-list">Checks to see if this point and another point are equal within the specified tolerance.</td>
+        </tr>
+        <tr>
+          <td class="api-list"><a href="Point3D_isEqualToByTolerance.htm">Point3D.isEqualToByTolerance</a></td>
+          <td class="api-list">Checks to see if this point and another point are equal within the specified tolerance.</td>
+        </tr>
+        <tr>
+          <td class="api-list"><a href="Setup_models.htm">Setup.models</a></td>
+          <td class="api-list">Gets and sets the bodies associated with the setup. Passing in an empty ObjectCollection will remove all current bodies. Valid input is MeshBody and/or BRepBody objects.</td>
+        </tr>
+        <tr>
+          <td class="api-list"><a href="SweepFeature_taperAngle.htm">SweepFeature.taperAngle</a></td>
+          <td class="api-list">Gets the ModelParameter that defines the taper angle of the sweep feature. The value of the angle can be edited by using the properties on the ModelParameter object to edit the parameter.</td>
+        </tr>
+        <tr>
+          <td class="api-list"><a href="SweepFeature_twistAngle.htm">SweepFeature.twistAngle</a></td>
+          <td class="api-list">Gets the ModelParameter that defines the twist angle of the sweep feature. The value of the angle can be edited by using the properties on the ModelParameter object to edit the parameter.</td>
+        </tr>
+        <tr>
+          <td class="api-list"><a href="SweepFeatureInput_taperAngle.htm">SweepFeatureInput.taperAngle</a></td>
+          <td class="api-list">Gets and sets the taper angle of the sweep. This property is initialized with a taper angle of zero. A negative angle will taper the sweep inward while a positive value will taper the sweep outward. This property is valid for both parametric and non-parametric extrusions.</td>
+        </tr>
+        <tr>
+          <td class="api-list"><a href="SweepFeatureInput_twistAngle.htm">SweepFeatureInput.twistAngle</a></td>
+          <td class="api-list">Gets and sets the taper angle of the sweep. This property is initialized with a taper angle of zero. A negative angle will taper the sweep inward while a positive value will taper the sweep outward. This property is valid for both parametric and non-parametric extrusions.</td>
+        </tr>
+        <tr>
+          <td class="api-list"><a href="Workspace_tooltip.htm">Workspace.tooltip</a></td>
+          <td class="api-list">Gets or sets the tooltip text displayed for the workspace. This is the first line of text shown when the user hovers over the workspace name in the Fusion 360 toolbar drop-down. This is typically the name of the workspace. This is different from the name in the that the name is a short name shown in the drop-down. The tooltip is only shown when the user hovers over the name and box appears providing more information  about the workspace. For example, the name of the model workspace is "Model" and the tooltip is "Model Workspace".</td>
+        </tr>
+        <tr>
+          <td class="api-list"><a href="Workspace_tooltipDescription.htm">Workspace.tooltipDescription</a></td>
+          <td class="api-list">Gets or sets the tooltip description displayed for the workspace. The tooltip description is a longer description of the workspace and is only displayed when the user hovers over the workspace name in the Fusion 360 toolbar drop-down. The pop-up dialog that appears contains the tooltip, the tooltip description, and the toolclip which is a picture.</td>
+        </tr>
+      </Table><br><p>
+        <font size="1">
+          Help created: Wednesday, November 29, 2017 1:31 PM</font>
+      </p><br><br><div id="CopyrightNotice" style="display:none;">
+        <hr>
+        <table width="100%" style="font-size:15">
+          <tr>
+            <td align="left">
+                © Copyright 2017 Autodesk, Inc.
+              </td>
+            <td align="right"><a href="mailto:mfg.api.help.comments@autodesk.com&subject=Fusion%20December 2017%20API%20Help%20(Whats%20New)">Comment on this page.</a></td>
+          </tr>
+        </table>
+      </div>
+    </div>
+  </body>
+</html>

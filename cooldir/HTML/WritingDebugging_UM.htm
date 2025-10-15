@@ -1,0 +1,345 @@
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta name="topic-type" content="reference-adsk">
+    <meta name="helpsystempath" content="/view/NINVFUS/ENU/">
+    <link rel="canonical" href="http://help.autodesk.com/cloudhelp/ENU/Fusion-360-API/files/WritingDebugging_UM.htm">
+    <meta name="product" content="NINVFUS">
+    <meta name="release" content="NA">
+    <meta name="book" content="Developer">
+    <meta name="component" content="Fusion-360-API">
+    <meta name="created" content="28/7/2014">
+    <meta name="user-comments" content="enable">
+    <meta name="description" content="">
+    <meta name="topicid" content="GUID-9701BBA7-EC0E-4016-A9C8-964AA4838954">
+    <meta name="experiencelevel" content="expert">
+    <meta name="audience" content="programmer">
+    <meta name="language" content="ENU">
+    <title>Creating a Script or Add-In</title>
+    <link rel="stylesheet" type="text/css" href="../Style/APIHelp-chm.css">
+	<link rel="stylesheet" type="text/css" href="/view/clientframework/client.css"/>
+	<script type="text/javascript" src="/view/clientframework/client.js"><!--filler--></script> 
+	<script>
+	  // This turns on the display of the copyright notice which is not visible by default.
+	  // Because the head is removed when used in the web help, this function will only exists
+	  // when the chm help is being created.
+	  window.onload = function() {
+		copyrightElement = document.getElementById('CopyrightNotice');
+		copyrightElement.style.display = 'block';
+	  };
+	</script>
+</head>
+<body>
+<link rel="stylesheet" type="text/css" href="../Style/APIHelp.css">
+	
+<h2 class="api">Creating a Script or Add-In</h2>
+
+<h3 class="api">Creating and Debugging Your First Script</h3>
+<p class="api">Technically, there is not much difference between a script and an add-in.  The process of creating and debugging them is mostly the same so the description below applies to both.  Before getting into the details, here are the basic steps to create and debug a Python script or add-in.</p>
+
+<ol>
+<li>
+<p class="api">Run the <b>Scripts and Add-Ins</b> command from the toolbar, as shown below.</p>
+
+<div align="center"><img src="../images/ScriptsAndAddInsCmd.png" border=0 align="middle" alt="Scripts command"></div>
+</li>
+
+<li>
+<p class="api">In the <b>Scripts and Add-Ins</b> dialog, click the “Create” button as shown below.</p>
+
+<div align="center"><img src="../images/CreateNewScript.png" border=0 align="middle" alt="Scripts command"></div>
+<br />
+</li>
+
+<li>
+<p class="api">In the “Create New Script or Add-In” dialog, choose “Script” and “Python” for the programming language, enter a name for the script name, and optionally enter some information in the “Description”, and “Author” fields and then click “Create”.  This will take you back to the “Scripts and Add-Ins” dialog, which you can dismiss.</p>
+
+<div align="center"><img src="../images/MyFirstScript.png" border=0 align="middle" alt="Scripts command"></div>
+<br />
+<p class="api">Fusion 360 did support the ability to create scripts and add-ins using JavaScript. In the July 2017 update of Fusion 360 this capability was moved to maintenance mode and is no longer supported. The Fusion 360 product team constantly monitors analytics data to get information about how Fusion 360 is being used to help make decisions about where to focus resources for future development. This information is also useful in identifying areas of Fusion 360 that have very little usage. In some cases these areas are retired in order to focus resources on the portions of the product that will benefit the most people. The JavaScript interface to the API was identified as having very little usage and has been retired to be able to focus resources on the Python and C++ interfaces. If you have existing JavaScript programs that you need to maintain you can access the <a href="https://autodesk.box.com/s/klmz50uk6hmq4f6gldpqofme4wj20mzx" target="_blank">API help for the previous version of Fusion 360</a>, which contains documentation for the JavaScript API interface.
+</p>
+</li>
+
+<li>
+<p class="api">Congratulations, you’ve just created your first script.  To run it, run the “Scripts and Add-Ins” command, choose your script from the list and click the “Run” button, as shown below.</p>
+
+<div align="center"><img src="../images/MyFirstScriptRun.png" border=0 align="middle" alt="Scripts command"></div>
+<br />
+
+<p class="api">You should see the message box below pop up, which is all a new script does.</p>
+
+<div align="center"><img src="../images/HelloSample.png" border=0 align="middle" alt="Scripts command"></div>
+<br />
+</li>
+
+<li>
+<p class="api">To debug your script, run the “Scripts and Add-Ins” command, choose your script from the list and then click “Debug” from the drop-down within the “Run” button, as shown below. </p>
+
+<div align="center"><img src="../images/MyFirstScriptDebug.png" border=0 align="middle" alt="Scripts command"></div>
+<br />
+
+<p class="api">Debugging a Python script will cause the Spyder development environment to be installed and opened where a break point is automatically added at the first line of the script to halt execution. You can now add additional break points, by double-clicking in the gray area to the left of a line or selecting a line and pressing F12. You can then continue execution of your program by running the "Continue" command (Ctrl + F12), as shown below.  More information about debugging is discussed below.</p>
+
+<div align="center"><img src="../images/SpyderContinue.png" border=0 align="middle" alt="Scripts command"></div>
+<br />
+
+<p class="api">You can also edit an existing script through the “Scripts and Add-Ins” command by selecting the script and clicking the “Edit” button.  It will open the Spyder development environment without starting the debug process.</p>
+</li>
+</ol>
+
+<h3 class="api">Script and Add-In Details</h3>
+
+<p class="api">Now that you’ve seen the basic process of creating and debugging a script, here is some more information about the details of both scripts and add-ins.</p>
+
+<p class="api">The <b>Scripts and Add-Ins</b> dialog is the main access point to scripts and add-ins for both users and programmers.  It contains two tabs; one where the available scripts are listed and the other where the available add-ins are listed.  From these lists you can select a script or add-in and then run, edit, or debug it.</p>
+
+<div align="center"><img src="../images/ScriptsAndAddIns.png" border=0 align="middle" alt="Scripts command"></div>
+<br />
+
+<p class="api">When creating a new script or add-in, the “Create New Script or Add-In” dialog is displayed where you enter information about your script or add-in.</p>
+
+<div align="center"><img src="../images/PythonOrJavaScript.png" border=0 align="middle" alt="Scripts command"></div>
+<br />
+
+<p class="api">The various settings in the dialog are described below.</p>
+
+<ul>
+<li>
+<p class="api"><b>Programming Language</b> – Choose whether you want to create a Python or C++ script or add-in.  If you check the “Save my choice in Preferences” then this will be remembered and automatically set the next time you create a new script or add-in.</p>
+</li>
+
+<li>
+<p class="api"><b>Run on Startup</b> – This setting is add-in specific and indicates if the add-in should be run automatically when Fusion 360 is started.  Most add-ins will want to take advantage of this capability so the commands they define will be available to the user as soon as Fusion 360 starts.</p>
+</li>
+
+<li>
+<p class="api"><b>Script or Add-In Name</b> – This is the name of your script or add-in. This name will be used to create a new folder in the location specified by the “Folder Location” and this will also be used for the name of the script or add-in code files.</p>
+</li>
+
+<li>
+<p class="api"><b>Description</b> – An optional description of the script or add-in.</p>
+</li>
+
+<li>
+<p class="api"><b>Author</b> – An optional name of the author of the script or add-in.</p>
+</li>
+
+<li>
+<p class="api"><b>Version</b> – This is an optional setting that is add-in specific and is the version of the add-in. This is a string and can be any form of a version label, i.e. “1.0.0”, “2016”, “R1”, “V2”, etc.</p>
+</li>
+
+<li>
+<p class="api"><b>Target Operating System</b> – Indicates which operating system(s) the script or add-in should be available in. For example, if your script or add-in uses Windows specific libraries you would set this to “Windows” so Fusion 360 won’t attempt to display or load it on a Mac.</p>
+</li>
+
+<li>
+<p class="api"><b>Folder Location</b> – The location where the script or add-in will be created. When you create a new script or add-in using the dialog, a new folder with the script or add-in name is created and the add-in files are created with that folder. The default locations for add-ins and scripts are shown below:
+
+<dl>
+<dt><b>Add-Ins</b></dt>
+<dd>Windows – %appdata%\Autodesk\Autodesk Fusion 360\API\AddIns</dd>
+<dd>Mac – $HOME/Library/Application Support/Autodesk/Autodesk Fusion 360/API/AddIns</dd>
+<dt><b>Scripts</b></dt>
+<dd>Windows – %appdata%\Autodesk\Autodesk Fusion 360\API\Scripts</dd>
+<dd>Mac – $HOME/Library/Application Support/Autodesk/Autodesk Fusion 360/API/Scripts</dd>
+</dl>
+</p>
+
+<p class="api">Scripts and add-ins can exist at any location on the machine but it’s only in the locations listed above where Fusion 360 automatically searches for add-ins when it starts up. A script or add-in in any other location will need to be explicitly located using the “+” icon in the “Scripts and Add-Ins” dialog. When copying or installing an add-in onto another computer you should copy it to the location specified above so Fusion 360 will find it automatically.</p>
+</li>
+</ul>
+
+
+<h3 class="api">Script and Add-In Files</h3>
+
+<p class="api">When a new script or add-in is created a new folder is created using the specified name and the code files (a .py file for Python and a .cpp and other related files for C++) are created. In addition to the code files, a .manifest file is also created that contains additional information about the script or add-in.  For example, if you create a Python add-in called MyAddIn, a MyAddIn folder with the files shown below is created in “…/Autodesk/Autodesk Fusion 360/API/AddIns”.  Additional files associated with the script or add-in (icons, for example) should be added to this folder so the add-in is completely self-contained and can be “installed” by simply copying this folder to the correct location.</p>
+
+<div align="center"><img src="../images/AddInFiles.png" border=0 align="middle" alt="Scripts command"></div>
+<br />
+
+
+<h3 class="api">The Manifest File</h3>
+
+<p class="api">The .manifest file contains the information that you specified in the “Create New Script or Add-In” dialog when you initially created the script or add-in.  It also contains additional information Fusion 360 uses to determine if and when it should be displayed and loaded.  The manifest file has the same name as the add-in but has a .manifest extension. The file is a text file in JSON format. Shown below is an example of a typical manifest file for an add-in.</p>
+
+<pre class="api-code">
+{
+	"autodeskProduct":	"Fusion360",
+	"type":	"addin",
+	"id":	"62a9e55a-dbe4-408d-ad8b-cb802473725e",
+	"author":	"Brian Ekins",
+	"description":	{
+		"":	"This is a test add-in."
+	},
+	"version":	"V1",
+	"runOnStartup":	true,
+	"supportedOS":	"windows|mac"
+}
+</pre>
+<br />
+
+<p class="api">Below is a description of each of the items in the manifest.
+<ul>
+<li><b>autodeskProduct</b> – This property will always have the value “Fusion360”.</li>
+<li><b>type</b> – This property can be “addin” or “script” to indicate if this program is an add-in or script.</li>
+<li><b>id</b> – This property is a GUID that uniquely identifies this add-in. If you ever create a new add-in or script by copying an existing add-in or script you should replace this ID with a new GUID so the ID of each one is unique. This is not currently being used by Fusion 360 but is likely to be used in the future.</li>
+<li><b>author</b> – This property is a string containing the name of the author. This is displayed in the “Scripts and Add-Ins” dialog.</li>
+<li><b>description</b> – This is a JSON object with properties that define the description of the add-in. Using the JSON format it is defined as an object with one or more properties so that descriptions can be specified in multiple languages. The example below has one property with an empty name, which is the default description and will be used for any language that doesn’t have a specific description. The other three properties define the text to use for English, Italian, and Chinese where the language is specified using industry standard language codes.<br /><br />
+
+<pre class="api-code">
+"Description":{
+               "":"Default description",
+               "1033": "Description in English"
+               "1040": "Descrizione in Italiano"
+               "1028": "說明在中國"
+}
+</pre>
+</li>
+<br />
+
+<li><b>version</b> – This property defines the version of the add-in and can be any string, i.e. “1.0.0”, “2016”, “R1”, “V2”, etc.</li>
+
+<li><b>runOnStartup</b> – This property can be true or false to indicate if this add-in should be automatically started by Fusion 360 when Fusion 360 is started.</li>
+
+<li><b>supportedOS</b> – This property can be “windows”, “mac”, or “windows|mac”. This defines which operating systems the add-in will load on. One example of where this is used is in the case where an add-in uses OS specific libraries so the add-in won’t work on any other OS. For example, if I write an add-in that uses a Windows specific library I can set the supportedOS to “windows” so that on a Mac, Fusion 360 won’t display the add-in in the “Scripts and Add-Ins” dialog and also won’t attempt to run it on startup. Most Python scripts and add-ins should be compatible with both Mac and Windows so this should be set to “windows|mac” to indicate the add-in can be loaded for both operating systems.  C++ scripts and add-ins must be compiled seperately for each platform so it's more likely they may use this option when the developer doesn't have access to both a Windows and Mac machine to compile.</li>
+
+<li><b>sourcewindows and sourcemac</b> – <p class="api">A C++ script or add-in has two additional properties that identify the filename of the project file for both Windows and Mac.  When you select the "Edit" option in the "Scripts and Add-Ins" dialog, Fusion 360 opens the associated project file using whatever application is associated with that file type.  For example, in the example below a .vcxproj file is specified for the sourcewindows property so Visual Studio will be invoked since it's defined within Windows as the associated application for .vcxproj files.  By changing this file you can choose to use any code editor that you want.</p>
+
+<pre class="api-code">
+	"sourcewindows":	"NewCPPTest.vcxproj",
+	"sourcemac":	"NewCPPTest.xcodeproj"
+</pre>
+<br />
+</li>
+</ul>
+</p>
+
+<p class="api">Notice that, with the exception of the sourcewindows and sourcemac properties, the name of the script or add-in is not specified in the manifest file.  The name is defined by the name used for the main directory and the files.  To change the name of a script or add-in, change the names of the directory and files to the new name.</p>
+
+<h3 class="api">Script Code</h3>
+<p class="api">Below is the code that is automatically written when a new Python script is created.  Notice the “run” function.  Fusion 360 will automatically call the run function when the script is first executed.  It also passes in information through the “context” argument as to whether the script is being run at Fusion 360 startup or is being loaded during a session.  For a script, this can be ignored because for a script it is always run during a Fusion 360 session and never at startup.  The run function is the entry point into your add-in.</p>
+
+<pre class="api-code">
+Import adsk.core, adsk.fusion, traceback
+
+def run(context):
+    ui = None
+    try:
+        app = adsk.core.Application.get()
+        ui  = app.userInterface
+        ui.messageBox('Hello script')
+
+    except:
+        if ui:
+            ui.messageBox('Failed:\n{}'.format(traceback.format_exc()))
+</pre>
+<br />
+
+<h3 class="api">Add-In Code</h3>
+<p class="api">The code below is what’s written when a new Python add-in is created.   Notice that it’s exactly the same as a new script except that it also contains a “stop” function.</p>
+
+<pre class="api-code">
+import adsk.core, adsk.fusion, traceback
+
+def run(context):
+    ui = None
+    try:
+        app = adsk.core.Application.get()
+        ui  = app.userInterface
+        ui.messageBox('Hello addin')
+
+    except:
+        if ui:
+            ui.messageBox('Failed:\n{}'.format(traceback.format_exc()))
+
+def stop(context):
+    ui = None
+    try:
+        app = adsk.core.Application.get()
+        ui  = app.userInterface
+        ui.messageBox('Stop addin')
+
+    except:
+        if ui:
+            ui.messageBox('Failed:\n{}'.format(traceback.format_exc()))
+</pre>
+<br />
+
+<p class="api">The “stop” function is called by Fusion 360 whenever the add-in is being stopped and unloaded. This can happen because the user is stopping it using the “Scripts and Add-Ins” dialog or more typically it is because Fusion 360 is shutting down and all add-ins are being stopped. The stop function is where the add-in can perform any needed clean up, like removing any user-interface elements that it created.</p>
+
+<p class="api">Both the run and the stop functions have a single argument called “context” that is used to pass additional information to the add-in indicating the context of why the run or stop function is being called. Depending on the language, this information is passed using different types, but in all cases it represents a set of name:value pairs. Python passes this in as a Dictionary object and C++ passes it in as a string in JSON format. The following name:value pairs are currently supported.</p>
+
+<p class="api">
+<b>run</b>
+<br />
+    <Table class="api-list">
+      <tr class="header">
+        <td class="api-list" style="width:1%;">
+                Name
+              </td>
+        <td class="api-list" style="width:10%;">
+                Value
+              </td>
+        <td class="api-list">
+                Description
+              </td>
+      </tr>
+      <tr>
+        <td class="api-list">IsApplicationStartup </td>
+        <td class="api-list">true or false</td>
+        <td class="api-list">Indicates the add-in is being started as a result automatic loading during Fusion 360 startup (true) or is being loaded by the user through the “Scripts and Add-Ins” dialog (false).</td>
+      </tr>
+    </Table>
+</p> 
+
+<p class="api"><b>stop</b><br />
+    <Table class="api-list">
+      <tr class="header">
+        <td class="api-list" style="width:1%;">
+                Name
+              </td>
+        <td class="api-list" style="width:10%;">
+                Value
+              </td>
+        <td class="api-list">
+                Description
+              </td>
+      </tr>
+      <tr>
+        <td class="api-list">IsApplicationClosing </td>
+        <td class="api-list">true or false</td>
+        <td class="api-list">Indicates the add-in is being shut down as a result Fusion 360 being shut down (true) or because the user stopped it through the “Scripts and Add-Ins” dialog (false).</td>
+      </tr>
+    </Table>
+</p> 
+
+<h3 class="api">Scripts vs. Add-Ins</h3>
+
+<p class="api">As was said earlier, there is very little technical difference between a script and an add-in.  The primary difference is how they’re executed and their lifetime.  A script is executed by the user through the “Scripts and Add-Ins” command and stops immediately after the run function completes execution.  A script runs and then it’s done.</p>
+
+<p class="api">An add-in is typically automatically loaded by Fusion 360 when Fusion 360 starts up.  An add-in also typically creates one or more custom commands and adds them to the user interface.  The add-in continues to run throughout the Fusion 360 session so it can react whenever any of its commands are executed by the user.  The add-in remains running until Fusion 360 is shut down or the user explicitly stops it through the “Scripts and Add-Ins” dialog.  When it stops, it cleans up whatever user interface customization it created in its stop function.</p>
+
+<p class="api">How an add-in uses the Fusion 360 API is not any different from a script. It’s the same API and none of the API calls are limited to either scripts or add-ins. However, there are a couple of areas of the API that are more useful to an add-in than a script. The first is the portion of the API that deals with working with the Fusion 360 user-interface and adding buttons or other controls to access your custom commands. For example, if you create a custom command that draws geometry in a sketch you will want to add a new button to the Sketch panel so it will be easy for the user to find. Because an add-in can be loaded at startup it can add its custom commands to the user interface whenever Fusion 360 starts up so they're always available to the user and appear as a standard Fusion 360 command. This is described in more detail in the <a href="UserInterface_UM.htm">User Interface</a> topic.</p> 
+
+<p class="api">A second area of the API that is useful for add-ins is commands. The use of commands is not limited to add-ins and there are sometimes reasons to use the command functionality within a script but it is typically used and make more sense within an add-in. This is described in the <a href="Commands_UM.htm">Commands</a> topic.</p>
+
+<h3 class="api">Editing and Debugging</h3>
+<p class="api">For more detaled information about editing and debugging your scripts and add-ins see the language specific topics (<a href="PythonSpecific_UM.htm">Python</a> or <a href="CPPSpecific_UM.htm">C++</a>) because the process is different depending on which programming language you're using.</p>
+
+<br />
+<br />
+<div id="CopyrightNotice" style="display:none;">
+  <hr />
+  <table width="100%" style="font-size:15">
+	<tr>
+	  <td align="left">
+		&copy; Copyright 2017 Autodesk, Inc.
+	  </td>
+	  <td align="right">
+		<a href="mailto:mfg.api.help.comments@autodesk.com&subject=Fusion%20December 2017%20API%20Help%20(WritingDebugging_UM)">Comment on this page.</a>
+	  </td>
+	</tr>
+  </table>
+</div>
+</body>
+</html>

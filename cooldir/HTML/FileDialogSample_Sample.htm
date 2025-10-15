@@ -1,0 +1,192 @@
+<html>
+  <head>
+    <META http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="topic-type" content="reference-adsk">
+    <meta name="helpsystempath" content="/view/NINVFUS/ENU/">
+    <link rel="canonical" href="http://help.autodesk.com/cloudhelp/ENU/Fusion-360-API/files/FileDialogSample_Sample.htm">
+    <meta name="product" content="NINVFUS">
+    <meta name="release" content="NA">
+    <meta name="book" content="Developer">
+    <meta name="component" content="Fusion-360-API">
+    <meta name="created" content="">
+    <meta name="user-comments" content="enable">
+    <meta name="description" content="File Dialog Sample Sample">
+    <meta name="topicid" content="GUID-d5163350-6d2f-11e7-8c44-3417ebc87622">
+    <meta name="experiencelevel" content="expert">
+    <meta name="audience" content="programmer">
+    <meta name="language" content="ENU">
+    <title>File Dialog Sample</title>
+    <link rel="stylesheet" href="../Style/jquery-ui.css"><script src="../Scripts/jquery-1.11.1.js"></script><script src="../Scripts/jquery-ui.js"></script><link rel="stylesheet" type="text/css" href="../Style/APIHelp-chm.css">
+    <link rel="stylesheet" type="text/css" href="/view/clientframework/client.css"><script type="text/javascript" src="/view/clientframework/client.js"></script><script>
+          // This turns on the display of the copyright notice which is not visible by default.
+          // Because the head is removed when used in the web help, this function will only exists
+          // when the chm help is being created.
+          window.onload = function() {
+          copyrightElement = document.getElementById('CopyrightNotice');
+          copyrightElement.style.display = 'block';
+          };
+        </script><script>
+          $(function() {
+          $( "#tabs" ).tabs();
+          });
+        </script></head>
+  <body>
+    <link rel="stylesheet" type="text/css" href="../Style/APIHelp.css">
+    <h1 class="api">File Dialog Sample API Sample
+        </h1>
+    <h2 class="api">
+          Description
+        </h2>Demonstrating how to pop up a file dialog and a folder dialog.<h2 class="api">
+          Code Samples
+        </h2>
+    <div id="tabs">
+      <ul>
+        <li><a href="#Python">Python</a></li>
+        <li><a href="#C++">C++</a></li>
+      </ul>
+      <div id="Python" class="api-code">
+        <pre class="api-code"><span style="color:blue">#Author-</span>
+<span style="color:blue">#Description-</span>
+
+import adsk.core, adsk.fusion, traceback
+import os.path
+
+def run(context):
+    ui = None
+    try:
+        app = adsk.core.Application.get()
+        ui  = app.userInterface
+            
+        msg = ''
+        <span style="color:blue"># Set styles of file dialog.</span>
+        fileDlg = ui.createFileDialog()
+        fileDlg.isMultiSelectEnabled = True
+        fileDlg.title = 'Fusion File Dialog'
+        fileDlg.filter = '*.*'
+        
+        <span style="color:blue"># Show file open dialog</span>
+        dlgResult = fileDlg.showOpen()
+        if dlgResult == adsk.core.DialogResults.DialogOK:
+            msg += '\nopen files:'
+            for filename in fileDlg.filenames:
+                msg += '\n\t{}'.format(filename)       
+        
+        <span style="color:blue"># Show file save dialog</span>
+        dlgResult = fileDlg.showSave()
+        if dlgResult == adsk.core.DialogResults.DialogOK:
+            msg += '\nsave to: {}'.format(fileDlg.filename)                     
+            
+        <span style="color:blue"># Set styles of file dialog.</span>
+        folderDlg = ui.createFolderDialog()
+        folderDlg.title = 'Fusion Folder Dialog' 
+        
+        <span style="color:blue"># Show folder dialog</span>
+        dlgResult = folderDlg.showDialog()
+        if dlgResult == adsk.core.DialogResults.DialogOK:
+            msg += '\nselect folder: {}'.format(folderDlg.folder)                      
+        
+        ui.messageBox(msg)
+
+    except:
+        if ui:
+            ui.messageBox('Failed:\n{}'.format(traceback.format_exc()))</pre>
+      </div>
+      <div id="C++" class="api-code">
+        <pre class="api-code">#include &lt;Core/Application/Application.h&gt;
+#include &lt;Core/UserInterface/UserInterface.h&gt;
+#include &lt;Core/UserInterface/FileDialog.h&gt;
+#include &lt;Core/UserInterface/FolderDialog.h&gt;
+
+using namespace adsk::core;
+
+Ptr&lt;UserInterface&gt; ui;
+
+extern "C" XI_EXPORT bool run(const char* context)
+{
+	Ptr&lt;Application&gt; app = Application::get();
+	if (!app)
+		return false;
+
+	ui = app-&gt;userInterface();
+	if (!ui)
+		return false;
+
+	std::string msg("");
+
+	<span style="color:blue">// Set styles of file dialog.</span>
+	Ptr&lt;FileDialog&gt; fileDlg = ui-&gt;createFileDialog();
+	if (!fileDlg)
+		return false;
+	fileDlg-&gt;title("Fusion File Dialog");
+	fileDlg-&gt;filter("*.*");
+	fileDlg-&gt;isMultiSelectEnabled(true);
+
+	<span style="color:blue">// Show file open dialog</span>
+	DialogResults dlgResult = fileDlg-&gt;showOpen();
+	if (dlgResult == DialogOK) {
+		msg += "\nopen files: ";
+		std::vector&lt;std::string&gt; fileNames = fileDlg-&gt;filenames();
+		for (std::string fileName : fileNames) {
+			msg += "\n\t" + fileName;
+		}
+	}
+
+	<span style="color:blue">// Show file save dialog</span>
+	dlgResult = fileDlg-&gt;showSave();
+	if (dlgResult == DialogOK) {
+		std::string fileName = fileDlg-&gt;filename();
+		msg += "\nsave to: " + fileName;
+	}
+
+	<span style="color:blue">// Set styles of file dialog.</span>
+	Ptr&lt;FolderDialog&gt; folderDlg = ui-&gt;createFolderDialog();
+	if (!folderDlg)
+		return false;
+	folderDlg-&gt;title("Fusion Folder Dialog");
+	
+	<span style="color:blue">// Show folder dialog</span>
+	dlgResult = folderDlg-&gt;showDialog();
+	if (dlgResult == DialogOK) {
+		std::string folderName = folderDlg-&gt;folder();
+		msg += "\nselect the folder: " + folderName;
+	}
+
+	if(!msg.empty())
+		ui-&gt;messageBox(msg);
+	return true;
+}
+
+
+#ifdef XI_WIN
+
+#include &lt;windows.h&gt;
+
+BOOL APIENTRY DllMain(HMODULE hmodule, DWORD reason, LPVOID reserved)
+{
+	switch (reason)
+	{
+	case DLL_PROCESS_ATTACH:
+	case DLL_THREAD_ATTACH:
+	case DLL_THREAD_DETACH:
+	case DLL_PROCESS_DETACH:
+		break;
+	}
+	return TRUE;
+}
+
+#endif <span style="color:blue">// XI_WIN</span></pre>
+      </div>
+    </div><br><br><div id="CopyrightNotice" style="display:none;">
+      <hr>
+      <table width="100%" style="font-size:15">
+        <tr>
+          <td align="left">
+                © Copyright 2017 Autodesk, Inc.
+              </td>
+          <td align="right"><a href="mailto:mfg.api.help.comments@autodesk.com&subject=Fusion%20December 2017%20API%20Help%20(FileDialogSample%20Sample%20Help%20Topic)">Comment on this page.</a></td>
+        </tr>
+      </table>
+    </div>
+  </body>
+</html>

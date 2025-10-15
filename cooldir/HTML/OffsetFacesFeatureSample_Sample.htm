@@ -1,0 +1,231 @@
+<html>
+  <head>
+    <META http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="topic-type" content="reference-adsk">
+    <meta name="helpsystempath" content="/view/NINVFUS/ENU/">
+    <link rel="canonical" href="http://help.autodesk.com/cloudhelp/ENU/Fusion-360-API/files/OffsetFacesFeatureSample_Sample.htm">
+    <meta name="product" content="NINVFUS">
+    <meta name="release" content="NA">
+    <meta name="book" content="Developer">
+    <meta name="component" content="Fusion-360-API">
+    <meta name="created" content="">
+    <meta name="user-comments" content="enable">
+    <meta name="description" content="Offset Faces Feature API Sample Sample">
+    <meta name="topicid" content="GUID-97730bd8-4bf7-11e7-9cdc-005056c00008">
+    <meta name="experiencelevel" content="expert">
+    <meta name="audience" content="programmer">
+    <meta name="language" content="ENU">
+    <title>Offset Faces Feature API Sample</title>
+    <link rel="stylesheet" href="../Style/jquery-ui.css"><script src="../Scripts/jquery-1.11.1.js"></script><script src="../Scripts/jquery-ui.js"></script><link rel="stylesheet" type="text/css" href="../Style/APIHelp-chm.css">
+    <link rel="stylesheet" type="text/css" href="/view/clientframework/client.css"><script type="text/javascript" src="/view/clientframework/client.js"></script><script>
+          // This turns on the display of the copyright notice which is not visible by default.
+          // Because the head is removed when used in the web help, this function will only exists
+          // when the chm help is being created.
+          window.onload = function() {
+          copyrightElement = document.getElementById('CopyrightNotice');
+          copyrightElement.style.display = 'block';
+          };
+        </script><script>
+          $(function() {
+          $( "#tabs" ).tabs();
+          });
+        </script></head>
+  <body>
+    <link rel="stylesheet" type="text/css" href="../Style/APIHelp.css">
+    <h1 class="api">Offset Faces Feature API Sample API Sample
+        </h1>
+    <h2 class="api">
+          Description
+        </h2>Demonstrates how to use Offset Faces Feature related API.<h2 class="api">
+          Code Samples
+        </h2>
+    <div id="tabs">
+      <ul>
+        <li><a href="#Python">Python</a></li>
+        <li><a href="#C++">C++</a></li>
+      </ul>
+      <div id="Python" class="api-code">
+        <pre class="api-code">import adsk.core, adsk.fusion, traceback
+
+def run(context):
+    ui = None
+    try:
+        app = adsk.core.Application.get()
+        ui  = app.userInterface
+
+        
+        <span style="color:blue"># Get active design</span>
+        product = app.activeProduct
+        design = adsk.fusion.Design.cast(product)
+ 
+        <span style="color:blue"># Get root component in this design</span>
+        rootComp = design.rootComponent
+        
+        <span style="color:blue"># Get OffsetFaces feature</span>
+        offsetFaces = rootComp.features.offsetFacesFeatures
+        
+        for feature in offsetFaces:
+            featureInfo = 'FeatureInfo: name - {}, isSuppressed - {}, isParametric - {}, bodies - {}'.format(
+            feature.name, feature.isSuppressed, feature.isParametric, feature.bodies.count)
+            ui.messageBox(featureInfo)
+        
+        <span style="color:blue"># Get the first sub component</span>
+        subComp = rootComp.occurrences.item(0).component
+        
+        <span style="color:blue"># Get OffsetFaces feature by name</span>
+        offsetFacesFeat = subComp.features.offsetFacesFeatures.itemByName('OffsetFaces1')
+        featureInfo = 'FeatureInfo: name - {}, isSuppressed - {}, isParametric - {}, bodies - {}'.format(
+            offsetFacesFeat.name, offsetFacesFeat.isSuppressed, offsetFacesFeat.isParametric, offsetFacesFeat.bodies.count)
+        ui.messageBox(featureInfo)
+        
+
+    except:
+        if ui:
+            ui.messageBox('Failed:\n{}'.format(traceback.format_exc()))</pre>
+      </div>
+      <div id="C++" class="api-code">
+        <pre class="api-code">#include &lt;Core/Application/Application.h&gt;
+#include &lt;Core/UserInterface/UserInterface.h&gt;
+#include &lt;Core/Application/Document.h&gt;
+
+#include &lt;Fusion/Fusion/Design.h&gt;
+#include &lt;Fusion/Components/Component.h&gt;
+#include &lt;Fusion/Components/Occurrences.h&gt;
+#include &lt;Fusion/Components/Occurrence.h&gt;
+#include &lt;Fusion/Features/Features.h&gt;
+#include &lt;Fusion/Features/OffsetFacesFeatures.h&gt;
+#include &lt;Fusion/Features/OffsetFacesFeature.h&gt;
+#include &lt;Fusion/BRep/BRepBodies.h&gt;
+
+#include &lt;iostream&gt;
+
+
+
+using namespace adsk::core;
+using namespace adsk::fusion;
+
+Ptr&lt;UserInterface&gt; ui;
+
+extern "C" XI_EXPORT bool run(const char* context)
+{
+	Ptr&lt;Application&gt; app = Application::get();
+	if (!app)
+		return false;
+
+	ui = app-&gt;userInterface();
+	if (!ui)
+		return false;
+
+
+	<span style="color:blue">// Get active design</span>
+	Ptr&lt;Product&gt; product = app-&gt;activeProduct();
+	if (!product)
+		return false;
+
+	Ptr&lt;Design&gt; design = product;
+	if (!design)
+		return false;
+
+	<span style="color:blue">// Get root component in this design</span>
+	Ptr&lt;Component&gt; rootComp = design-&gt;rootComponent();
+	if (!rootComp)
+		return false;
+
+	<span style="color:blue">// Get OffsetFaces feature</span>
+	Ptr&lt;Features&gt; features = rootComp-&gt;features();
+	if (!features)
+		return false;
+
+	Ptr&lt;OffsetFacesFeatures&gt; offsetFaces = features-&gt;offsetFacesFeatures();
+	if (!offsetFaces)
+		return false;
+
+	for (size_t i = 0; i &lt; offsetFaces-&gt;count(); ++i)
+	{
+		Ptr&lt;OffsetFacesFeature&gt; feature = offsetFaces-&gt;item(i);
+		if (!feature)
+			return false;
+
+		Ptr&lt;BRepBodies&gt; bodies = feature-&gt;bodies();
+		if (!bodies)
+			return false;
+
+		std::string featureInfo = "FeatureInfo: name - " + feature-&gt;name() + ", isSuppressed - " + std::to_string(feature-&gt;isSuppressed()) +
+			", isParametric - " + std::to_string(feature-&gt;isParametric()) + ", bodies - " + std::to_string(bodies-&gt;count());
+		ui-&gt;messageBox(featureInfo);
+
+	}
+
+	<span style="color:blue">// Get the first sub component</span>
+	Ptr&lt;Occurrences&gt; subOccs = rootComp-&gt;occurrences();
+	if (!subOccs)
+		return false;
+
+	Ptr&lt;Occurrence&gt; firstOcc = subOccs-&gt;item(0);
+	if (!firstOcc)
+		return false;
+		
+	Ptr&lt;Component&gt; subComp = firstOcc-&gt;component();
+	if (!subComp)
+		return false;
+
+	<span style="color:blue">// Get OffsetFaces feature by name</span>
+	Ptr&lt;Features&gt; subFeatures = subComp-&gt;features();
+	if (!subFeatures)
+		return false;
+
+	Ptr&lt;OffsetFacesFeatures&gt; subOffsetFaces = subFeatures-&gt;offsetFacesFeatures();
+	if (!subOffsetFaces)
+		return false;
+
+	Ptr&lt;OffsetFacesFeature&gt; subOffsetFacesFeature = offsetFaces-&gt;itemByName("OffsetFaces1");
+	if (!subOffsetFacesFeature)
+		return false;
+
+	Ptr&lt;BRepBodies&gt; subBodies = subOffsetFacesFeature-&gt;bodies();
+	if (!subBodies)
+		return false;
+
+	std::string featureInfo = "FeatureInfo: name - " + subOffsetFacesFeature-&gt;name() + ", isSuppressed - " + std::to_string(subOffsetFacesFeature-&gt;isSuppressed()) +
+		", isParametric - " + std::to_string(subOffsetFacesFeature-&gt;isParametric()) + ", bodies - " + std::to_string(subBodies-&gt;count());
+
+	ui-&gt;messageBox(featureInfo);
+
+
+	return true;
+}
+
+
+#ifdef XI_WIN
+
+#include &lt;windows.h&gt;
+
+BOOL APIENTRY DllMain(HMODULE hmodule, DWORD reason, LPVOID reserved)
+{
+	switch (reason)
+	{
+	case DLL_PROCESS_ATTACH:
+	case DLL_THREAD_ATTACH:
+	case DLL_THREAD_DETACH:
+	case DLL_PROCESS_DETACH:
+		break;
+	}
+	return TRUE;
+}
+
+#endif <span style="color:blue">// XI_WIN</span></pre>
+      </div>
+    </div><br><br><div id="CopyrightNotice" style="display:none;">
+      <hr>
+      <table width="100%" style="font-size:15">
+        <tr>
+          <td align="left">
+                © Copyright 2017 Autodesk, Inc.
+              </td>
+          <td align="right"><a href="mailto:mfg.api.help.comments@autodesk.com&subject=Fusion%20December 2017%20API%20Help%20(OffsetFacesFeatureSample%20Sample%20Help%20Topic)">Comment on this page.</a></td>
+        </tr>
+      </table>
+    </div>
+  </body>
+</html>

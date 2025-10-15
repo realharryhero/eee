@@ -1,0 +1,561 @@
+<html>
+  <head>
+    <META http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="topic-type" content="reference-adsk">
+    <meta name="helpsystempath" content="/view/NINVFUS/ENU/">
+    <link rel="canonical" href="http://help.autodesk.com/cloudhelp/ENU/Fusion-360-API/files/PaletteSample_Sample.htm">
+    <meta name="product" content="NINVFUS">
+    <meta name="release" content="NA">
+    <meta name="book" content="Developer">
+    <meta name="component" content="Fusion-360-API">
+    <meta name="created" content="">
+    <meta name="user-comments" content="enable">
+    <meta name="description" content="Palette Sample Sample">
+    <meta name="topicid" content="GUID-F0068478-49F0-4E5E-9BAD-3116D8FCBCAF">
+    <meta name="experiencelevel" content="expert">
+    <meta name="audience" content="programmer">
+    <meta name="language" content="ENU">
+    <title>Palette Sample</title>
+    <link rel="stylesheet" href="../Style/jquery-ui.css"><script src="../Scripts/jquery-1.11.1.js"></script><script src="../Scripts/jquery-ui.js"></script><link rel="stylesheet" type="text/css" href="../Style/APIHelp-chm.css">
+    <link rel="stylesheet" type="text/css" href="/view/clientframework/client.css"><script type="text/javascript" src="/view/clientframework/client.js"></script><script>
+          // This turns on the display of the copyright notice which is not visible by default.
+          // Because the head is removed when used in the web help, this function will only exists
+          // when the chm help is being created.
+          window.onload = function() {
+          copyrightElement = document.getElementById('CopyrightNotice');
+          copyrightElement.style.display = 'block';
+          };
+        </script><script>
+          $(function() {
+          $( "#tabs" ).tabs();
+          });
+        </script></head>
+  <body>
+    <link rel="stylesheet" type="text/css" href="../Style/APIHelp.css">
+    <h1 class="api">Palette Sample API Sample
+        </h1>
+    <h2 class="api">
+          Description
+        </h2><p>Demonstrates how to create a palette, how to dock and snap palettes and how Fusion communicates with the palette HTML. The sample is an add-in.  To use it, create a new Python or C++ add-in and replace the code with the code below. You also need to create an html file using the name and code below. The html file needs to be in the same folder as the py or dll file.</p>
+
+<h3 class="api">palette.html</h3>
+<pre class="api-code">
+&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+    &lt;head&gt;
+    &lt;/head&gt;
+    &lt;body&gt;
+        &lt;p id='p1'&gt;Click the button below or use the "Send info to HTML" command in the ADD-INS panel.&lt;/p&gt;
+        &lt;button type='button' onclick='sendInfoToFusion()'&gt;Click to send info to Fusion&lt;/button&gt; 
+        &lt;br /&gt;&lt;br /&gt;
+    &lt;/body&gt;
+    &lt;script&gt;
+        function sendInfoToFusion(){
+            var args = {
+                arg1 : "Sample argument 1",
+                arg2 : "Sample argument 2"
+            };
+            adsk.fusionSendData('send', JSON.stringify(args));
+        }
+        
+        window.fusionJavaScriptHandler = {handle: function(action, data){
+            try {
+                if (action == 'send') {
+					<span style="color:blue">// Update a paragraph with the data passed in.</span>
+					document.getElementById('p1').innerHTML = data;
+				}
+				else if (action == 'debugger') {
+                    debugger;
+				}
+				else {
+					return 'Unexpected command type: ' + action;
+                }
+            } catch (e) {
+                console.log(e);
+                console.log('exception caught with command: ' + action + ', data: ' + data);
+            }
+            return 'OK';
+        }};
+    &lt;/script&gt;
+&lt;/html&gt;
+</pre><h2 class="api">
+          Code Samples
+        </h2>
+    <div id="tabs">
+      <ul>
+        <li><a href="#Python">Python</a></li>
+        <li><a href="#C++">C++</a></li>
+      </ul>
+      <div id="Python" class="api-code">
+        <pre class="api-code">import adsk.core, adsk.fusion, adsk.cam, traceback
+import json
+
+<span style="color:blue"># global set of event handlers to keep them referenced for the duration of the command</span>
+handlers = []
+_app = adsk.core.Application.cast(None)
+_ui = adsk.core.UserInterface.cast(None)
+num = 0
+
+
+<span style="color:blue"># Event handler for the commandExecuted event.</span>
+class ShowPaletteCommandExecuteHandler(adsk.core.CommandEventHandler):
+    def __init__(self):
+        super().__init__()
+    def notify(self, args):
+        try:
+            <span style="color:blue"># Create and display the palette.</span>
+            palette = _ui.palettes.itemById('myPalette')
+            if not palette:
+                palette = _ui.palettes.add('myPalette', 'My Palette', 'palette.html', True, True, True, 300, 200)
+
+                <span style="color:blue"># Dock the palette to the right side of Fusion window.</span>
+                palette.dockingState = adsk.core.PaletteDockingStates.PaletteDockStateRight
+    
+                <span style="color:blue"># Add handler to HTMLEvent of the palette.</span>
+                onHTMLEvent = MyHTMLEventHandler()
+                palette.incomingFromHTML.add(onHTMLEvent)   
+                handlers.append(onHTMLEvent)
+    
+                <span style="color:blue"># Add handler to CloseEvent of the palette.</span>
+                onClosed = MyCloseEventHandler()
+                palette.closed.add(onClosed)
+                handlers.append(onClosed)   
+            else:
+                palette.isVisible = True                               
+        except:
+            _ui.messageBox('Command executed failed: {}'.format(traceback.format_exc()))
+
+
+<span style="color:blue"># Event handler for the commandCreated event.</span>
+class ShowPaletteCommandCreatedHandler(adsk.core.CommandCreatedEventHandler):
+    def __init__(self):
+        super().__init__()              
+    def notify(self, args):
+        try:
+            command = args.command
+            onExecute = ShowPaletteCommandExecuteHandler()
+            command.execute.add(onExecute)
+            handlers.append(onExecute)                                     
+        except:
+            _ui.messageBox('Failed:\n{}'.format(traceback.format_exc()))     
+
+
+<span style="color:blue"># Event handler for the commandExecuted event.</span>
+class SendInfoCommandExecuteHandler(adsk.core.CommandEventHandler):
+    def __init__(self):
+        super().__init__()
+    def notify(self, args):
+        try:
+            <span style="color:blue"># Send information to the palette. This will trigger an event in the javascript</span>
+            <span style="color:blue"># within the html so that it can be handled.</span>
+            palette = _ui.palettes.itemById('myPalette')
+            if palette:
+                global num
+                num += 1
+                palette.sendInfoToHTML('send', 'This is a message sent to the palette from Fusion. It has been sent {} times.'.format(num))                        
+        except:
+            _ui.messageBox('Command executed failed: {}'.format(traceback.format_exc()))
+
+
+<span style="color:blue"># Event handler for the commandCreated event.</span>
+class SendInfoCommandCreatedHandler(adsk.core.CommandCreatedEventHandler):
+    def __init__(self):
+        super().__init__()              
+    def notify(self, args):
+        try:
+            command = args.command
+            onExecute = SendInfoCommandExecuteHandler()
+            command.execute.add(onExecute)
+            handlers.append(onExecute)                                     
+        except:
+            _ui.messageBox('Failed:\n{}'.format(traceback.format_exc()))     
+
+
+<span style="color:blue"># Event handler for the palette close event.</span>
+class MyCloseEventHandler(adsk.core.UserInterfaceGeneralEventHandler):
+    def __init__(self):
+        super().__init__()
+    def notify(self, args):
+        try:
+            _ui.messageBox('Close button is clicked.') 
+        except:
+            _ui.messageBox('Failed:\n{}'.format(traceback.format_exc()))
+
+
+<span style="color:blue"># Event handler for the palette HTML event.                </span>
+class MyHTMLEventHandler(adsk.core.HTMLEventHandler):
+    def __init__(self):
+        super().__init__()
+    def notify(self, args):
+        try:
+            htmlArgs = adsk.core.HTMLEventArgs.cast(args)            
+            data = json.loads(htmlArgs.data)
+            msg = "An event has been fired from the html to Fusion with the following data:\n"
+            msg += '    Command: {}\n    arg1: {}\n    arg2: {}'.format(htmlArgs.action, data['arg1'], data['arg2'])
+            _ui.messageBox(msg)
+        except:
+            _ui.messageBox('Failed:\n{}'.format(traceback.format_exc()))           
+
+                
+def run(context):
+    try:
+        global _ui, _app
+        _app = adsk.core.Application.get()
+        _ui  = _app.userInterface
+        
+        <span style="color:blue"># Add a command that displays the panel.</span>
+        showPaletteCmdDef = _ui.commandDefinitions.itemById('showPalette')
+        if not showPaletteCmdDef:
+            showPaletteCmdDef = _ui.commandDefinitions.addButtonDefinition('showPalette', 'Show custom palette', 'Show the custom palette', '')
+
+            <span style="color:blue"># Connect to Command Created event.</span>
+            onCommandCreated = ShowPaletteCommandCreatedHandler()
+            showPaletteCmdDef.commandCreated.add(onCommandCreated)
+            handlers.append(onCommandCreated)
+        
+         
+        <span style="color:blue"># Add a command under ADD-INS panel which sends information from Fusion to the palette's HTML.</span>
+        sendInfoCmdDef = _ui.commandDefinitions.itemById('sendInfoToHTML')
+        if not sendInfoCmdDef:
+            sendInfoCmdDef = _ui.commandDefinitions.addButtonDefinition('sendInfoToHTML', 'Send info to Palette', 'Send Info to Palette HTML', '')
+
+            <span style="color:blue"># Connect to Command Created event.</span>
+            onCommandCreated = SendInfoCommandCreatedHandler()
+            sendInfoCmdDef.commandCreated.add(onCommandCreated)
+            handlers.append(onCommandCreated)
+
+        <span style="color:blue"># Add the command to the toolbar.</span>
+        panel = _ui.allToolbarPanels.itemById('SolidScriptsAddinsPanel')
+        cntrl = panel.controls.itemById('showPalette')
+        if not cntrl:
+            panel.controls.addCommand(showPaletteCmdDef)
+
+        cntrl = panel.controls.itemById('sendInfoToHTML')
+        if not cntrl:
+            panel.controls.addCommand(sendInfoCmdDef)
+    except:
+        if _ui:
+            _ui.messageBox('Failed:\n{}'.format(traceback.format_exc()))
+
+
+def stop(context):
+    try:        
+        <span style="color:blue"># Delete the palette created by this add-in.</span>
+        palette = _ui.palettes.itemById('myPalette')
+        if palette:
+            palette.deleteMe()
+            
+        <span style="color:blue"># Delete controls and associated command definitions created by this add-ins</span>
+        panel = _ui.allToolbarPanels.itemById('SolidScriptsAddinsPanel')
+        cmd = panel.controls.itemById('showPalette')
+        if cmd:
+            cmd.deleteMe()
+        cmdDef = _ui.commandDefinitions.itemById('showPalette')
+        if cmdDef:
+            cmdDef.deleteMe() 
+
+        cmd = panel.controls.itemById('sendInfoToHTML')
+        if cmd:
+            cmd.deleteMe()
+        cmdDef = _ui.commandDefinitions.itemById('sendInfoToHTML')
+        if cmdDef:
+            cmdDef.deleteMe() 
+            
+        _ui.messageBox('Stop addin')
+    except:
+        if _ui:
+            _ui.messageBox('Failed:\n{}'.format(traceback.format_exc()))</pre>
+      </div>
+      <div id="C++" class="api-code">
+        <pre class="api-code">#include &lt;Core/CoreAll.h&gt;
+#include &lt;Fusion/FusionAll.h&gt;
+
+using namespace adsk::core;
+using namespace adsk::fusion;
+
+Ptr&lt;Application&gt; _app;
+Ptr&lt;UserInterface&gt; _ui;
+size_t num;
+
+
+<span style="color:blue">// Event handler for the palette close event.</span>
+class MyCloseEventHandler : public adsk::core::UserInterfaceGeneralEventHandler
+{
+public:
+	void notify(const Ptr&lt;UserInterfaceGeneralEventArgs&gt;& eventArgs) override
+	{
+		_ui-&gt;messageBox("Close button is clicked.");
+	}
+
+} onClose_;
+
+
+<span style="color:blue">// Event handler for the palette HTML event. </span>
+class MyHTMLEventHandler : public adsk::core::HTMLEventHandler
+{
+public:
+	void notify(const Ptr&lt;HTMLEventArgs&gt;& eventArgs) override
+	{
+		std::string msg = "An event has been fired from the html to Fusion with the following data:\n";
+		msg += "Command: ";
+		msg += eventArgs-&gt;action();
+		msg += "\n";
+		msg += eventArgs-&gt;data();
+		_ui-&gt;messageBox(msg);
+	}
+
+} onHTMLEvent_;
+
+
+<span style="color:blue">// Event handler for the commandExecuted event to show the palette.</span>
+class ShowPaletteCommandExecuteHandler : public adsk::core::CommandEventHandler
+{
+public:
+	void notify(const Ptr&lt;CommandEventArgs&gt;& eventArgs) override
+	{
+		<span style="color:blue">// Create a palette</span>
+		Ptr&lt;Palettes&gt; palettes = _ui-&gt;palettes();
+		if (!palettes)
+			return;
+
+		Ptr&lt;Palette&gt; palette = palettes-&gt;itemById("myPalette");
+		if (!palette) {
+			palette = palettes-&gt;add("myPalette", "My Palette", "palette.html", true, true, true, 300, 200);
+			if (!palette)
+				return;
+
+			<span style="color:blue">// Dock the palette to the right side of Fusion window.</span>
+			palette-&gt;dockingState(PaletteDockStateRight);
+
+			<span style="color:blue">// Add handler to HTMLEvent of the palette</span>
+			Ptr&lt;HTMLEvent&gt; htmlEvent = palette-&gt;incomingFromHTML();
+			if (!htmlEvent)
+				return;
+
+			htmlEvent-&gt;add(&onHTMLEvent_);
+
+			<span style="color:blue">// Add handler to CloseEvent of the palette</span>
+			Ptr&lt;UserInterfaceGeneralEvent&gt; closeEvent = palette-&gt;closed();
+			if (!closeEvent)
+				return;
+			closeEvent-&gt;add(&onClose_);
+		}
+		else {
+			palette-&gt;isVisible(true);
+		}
+	}
+} onShowPaletteCommandExecuted_;
+
+
+<span style="color:blue">// Event handler for the commandCreated event.</span>
+class ShowPaletteCommandCreatedHandler : public adsk::core::CommandCreatedEventHandler
+{
+public:
+	void notify(const Ptr&lt;CommandCreatedEventArgs&gt;& eventArgs) override
+	{
+		Ptr&lt;Command&gt; command = eventArgs-&gt;command();
+		if (!command)
+			return;
+		Ptr&lt;CommandEvent&gt; exec = command-&gt;execute();
+		if (!exec)
+			return;
+		exec-&gt;add(&onShowPaletteCommandExecuted_);
+	}
+} onShowPaletteCommandCreated_;
+
+
+<span style="color:blue">// Event handler for the commandExecuted event to send info to the palette.</span>
+class SendInfoCommandExecuteHandler : public adsk::core::CommandEventHandler
+{
+public:
+	void notify(const Ptr&lt;CommandEventArgs&gt;& eventArgs) override
+	{
+		<span style="color:blue">// Send information to the palette.</span>
+		Ptr&lt;Palettes&gt; palettes = _ui-&gt;palettes();
+		if (!palettes)
+			return;
+
+		Ptr&lt;Palette&gt; palette = palettes-&gt;itemById("myPalette");
+		if (!palette)
+			return;
+
+		++num;
+		palette-&gt;sendInfoToHTML("send", "This is a message sent to the palette from Fusion. It has been sent " + std::to_string(num) + " times.");
+	}
+} onSendInfoCommandExecuted_;
+
+
+<span style="color:blue">// Event handler for the commandCreated event.</span>
+class SendInfoCommandCreatedHandler : public adsk::core::CommandCreatedEventHandler
+{
+public:
+	void notify(const Ptr&lt;CommandCreatedEventArgs&gt;& eventArgs) override
+	{
+		Ptr&lt;Command&gt; command = eventArgs-&gt;command();
+		if (!command)
+			return;
+		Ptr&lt;CommandEvent&gt; exec = command-&gt;execute();
+		if (!exec)
+			return;
+		exec-&gt;add(&onSendInfoCommandExecuted_);
+	}
+} onSendInfoCommandCreated_;
+
+
+extern "C" XI_EXPORT bool run(const char* context)
+{
+	_app = Application::get();
+	if (!_app)
+		return false;
+
+	_ui = _app-&gt;userInterface();
+	if (!_ui)
+		return false;
+
+	Ptr&lt;CommandDefinitions&gt; commandDefinitions = _ui-&gt;commandDefinitions();
+	if (!commandDefinitions)
+		return false;
+
+	<span style="color:blue">// Add a command that displays the panel.</span>
+	Ptr&lt;CommandDefinition&gt; showPaletteCmdDef = commandDefinitions-&gt;itemById("showPalette");
+	if (!showPaletteCmdDef) {
+		showPaletteCmdDef = commandDefinitions-&gt;addButtonDefinition("showPalette", "Show custom palette", "Show the custom palette", "");
+		if (!showPaletteCmdDef)
+			return false;
+
+		<span style="color:blue">// Connect to Command Created event.</span>
+		Ptr&lt;CommandCreatedEvent&gt; created = showPaletteCmdDef-&gt;commandCreated();
+		if (!created)
+			return false;
+		created-&gt;add(&onShowPaletteCommandCreated_);
+	}
+	<span style="color:blue">// Add a command under ADD-INS panel which sends information from Fusion to the palette's HTML.</span>
+	Ptr&lt;CommandDefinition&gt; sendInfoCmdDef = commandDefinitions-&gt;itemById("sendInfoToHTML");
+	if (!sendInfoCmdDef) {
+		sendInfoCmdDef = commandDefinitions-&gt;addButtonDefinition("sendInfoToHTML", "Send info to Palette", "Send Info to Palette HTML", "");
+		if (!sendInfoCmdDef)
+			return false;
+
+		<span style="color:blue">// Connect to Command Created event.</span>
+		Ptr&lt;CommandCreatedEvent&gt; created = sendInfoCmdDef-&gt;commandCreated();
+		if (!created)
+			return false;
+		created-&gt;add(&onSendInfoCommandCreated_);
+	}
+
+	<span style="color:blue">// Add the command to toolbar.</span>
+	Ptr&lt;Workspaces&gt; workspaces = _ui-&gt;workspaces();
+	if (!workspaces)
+		return false;
+
+
+	Ptr&lt;ToolbarPanelList&gt; panels = _ui-&gt;allToolbarPanels();
+	if (!panels)
+		return false;
+
+	Ptr&lt;ToolbarPanel&gt; panel = panels-&gt;itemById("SolidScriptsAddinsPanel");
+	if (!panel)
+		return false;
+
+	Ptr&lt;ToolbarControls&gt; controls = panel-&gt;controls();
+	if (!controls)
+		return false;
+
+	Ptr&lt;ToolbarControl&gt; ctrl = controls-&gt;itemById("showPalette");
+	if (!ctrl)
+		ctrl = controls-&gt;addCommand(showPaletteCmdDef);
+
+	ctrl = controls-&gt;itemById("sendInfoToHTML");
+	if (!ctrl)
+		ctrl = controls-&gt;addCommand(sendInfoCmdDef);
+
+	return true;
+}
+
+extern "C" XI_EXPORT bool stop(const char* context)
+{
+	if (_ui)
+	{
+		<span style="color:blue">// Delete the palette created by this add-in.</span>
+		Ptr&lt;Palettes&gt; palettes = _ui-&gt;palettes();
+		if (!palettes)
+			return false;
+
+		Ptr&lt;Palette&gt; palette = palettes-&gt;itemById("myPalette");
+		if (palette)
+			palette-&gt;deleteMe();
+
+		<span style="color:blue">// Delete controls and associated command definitions</span>
+		Ptr&lt;ToolbarPanelList&gt; panels = _ui-&gt;allToolbarPanels();
+		if (!panels)
+			return false;
+
+		Ptr&lt;ToolbarPanel&gt; panel = panels-&gt;itemById("SolidScriptsAddinsPanel");
+		if (!panel)
+			return false;
+
+		Ptr&lt;ToolbarControls&gt; controls = panel-&gt;controls();
+		if (!controls)
+			return false;
+
+		Ptr&lt;ToolbarControl&gt; ctrl = controls-&gt;itemById("sendInfoToHTML");
+		if (ctrl)
+			ctrl-&gt;deleteMe();
+
+		ctrl = controls-&gt;itemById("showPalette");
+		if (ctrl)
+			ctrl-&gt;deleteMe();
+
+		Ptr&lt;CommandDefinitions&gt; commandDefinitions = _ui-&gt;commandDefinitions();
+		if (!commandDefinitions)
+			return false;
+
+		Ptr&lt;CommandDefinition&gt; cmdDef = commandDefinitions-&gt;itemById("sendInfoToHTML");
+		if (cmdDef)
+			cmdDef-&gt;deleteMe();
+
+		cmdDef = commandDefinitions-&gt;itemById("showPalette");
+		if (cmdDef)
+			cmdDef-&gt;deleteMe();
+
+		_ui-&gt;messageBox("stop add-in.");
+		_ui = nullptr;
+	}
+
+	return true;
+}
+
+
+#ifdef XI_WIN
+
+#include &lt;windows.h&gt;
+
+BOOL APIENTRY DllMain(HMODULE hmodule, DWORD reason, LPVOID reserved)
+{
+	switch (reason)
+	{
+	case DLL_PROCESS_ATTACH:
+	case DLL_THREAD_ATTACH:
+	case DLL_THREAD_DETACH:
+	case DLL_PROCESS_DETACH:
+		break;
+	}
+	return TRUE;
+}
+
+#endif <span style="color:blue">// XI_WIN</span></pre>
+      </div>
+    </div><br><br><div id="CopyrightNotice" style="display:none;">
+      <hr>
+      <table width="100%" style="font-size:15">
+        <tr>
+          <td align="left">
+                © Copyright 2017 Autodesk, Inc.
+              </td>
+          <td align="right"><a href="mailto:mfg.api.help.comments@autodesk.com&subject=Fusion%20December 2017%20API%20Help%20(PaletteSample%20Sample%20Help%20Topic)">Comment on this page.</a></td>
+        </tr>
+      </table>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,302 @@
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta name="topic-type" content="reference-adsk">
+    <meta name="helpsystempath" content="/view/NINVFUS/ENU/">
+    <link rel="canonical" href="http://help.autodesk.com/cloudhelp/ENU/Fusion-360-API/files/CAMIntroduction_UM.htm">
+    <meta name="product" content="NINVFUS">
+    <meta name="release" content="NA">
+    <meta name="book" content="Developer">
+    <meta name="component" content="Fusion-360-API">
+    <meta name="created" content="1/5/2016">
+    <meta name="user-comments" content="enable">
+    <meta name="description" content="">
+    <meta name="topicid" content="GUID-7F3F9D48-ED88-451A-907C-82EAE67DEA93">
+    <meta name="experiencelevel" content="expert">
+    <meta name="audience" content="programmer">
+    <meta name="language" content="ENU">
+    <title>Introduction to the CAM API</title>
+    <link rel="stylesheet" type="text/css" href="../Style/APIHelp-chm.css">
+	<link rel="stylesheet" type="text/css" href="/view/clientframework/client.css"/>
+	<script type="text/javascript" src="/view/clientframework/client.js"><!--filler--></script> 
+	<script>
+	  // This turns on the display of the copyright notice which is not visible by default.
+	  // Because the head is removed when used in the web help, this function will only exists
+	  // when the chm help is being created.
+	  window.onload = function() {
+		copyrightElement = document.getElementById('CopyrightNotice');
+		copyrightElement.style.display = 'block';
+	  };
+	</script>
+</head>
+<body>
+<link rel="stylesheet" type="text/css" href="../Style/APIHelp.css">
+
+<h2 class="api">Introduction to the CAM API</h2>
+
+<p Class="Normal">The January 2016 Fusion 360 update is the first to include any CAM related API’s.
+This release provides an API that has partial coverage of the functionality in the CAM workspace and thus is to be considered as “Phase 1” of what is planned to be a multi-phased approach to eventually providing full API coverage of CAM.</p>
+
+<p Class="Normal">The primary automation workflows supported by the phase 1 API are generating toolpaths, posting NC files, and generating setup sheets for CAM operations that <b>already exist</b> in a Fusion 360 document.  It is important to note that this first release of the CAM API does not yet include any methods to create new Setups, Operations or Toolpaths.</p>  
+
+<p Class="Normal">So, in practical use-case terms, imagine you have an existing Fusion 360 design, complete with all of the toolpaths needed for machining the part.  Imagine that the toolpaths have all been posted and the setup sheets have also all been generated.  Now imagine making a minor change to a design parameter that will necessarily require you to regenerate any affected toolpaths.  Furthermore, any regenerated toolpaths would also need to be re-posted and finally, any related setup sheets would also have to be regenerated.  This first phase release of the CAM API’s provides the necessary access to the objects, methods and properties to fully automate this type of update workflow.</p>
+
+<h3 class="api">Getting Started with the CAM API’s</h3>
+<p Class="Normal">The CAM API functionality is provided through CAM specific libraries that are different from Fusion 360.  These libraries/modules that must be referenced by your scripts and add-ins so they have access to the new CAM API functionality.</p>
+
+<b>Python</b>
+<p Class="Normal">If you use the “Create” command from the Scripts and Addins Manager in Fusion 360 to create a new Python script or add-in you will notice that adsk.cam has been included in the list of modules to include.</p>
+
+<pre class="api-code">
+import adsk.core, adsk.fusion, adsk.cam, traceback
+</pre>
+<br />
+
+<b>C++</b>
+<p Class="Normal">If you use the “Create” command from the Scripts and Addins Manager in Fusion 360 to create a new C++ script or addin you will notice that the resulting cpp file contains the necessary #include and using statements referencing the cam namespace and header file.</p>
+
+<div align="center"><img src="../images/CamInclude.png" align="middle" alt="Include CAM files"></div>
+<br><br>
+ 
+<h3 class="api">Accessing the CAM Product within a Fusion 360 Document</h3>
+<p Class="Normal">A Fusion 360 document is broken up into separate pieces.  Each of these pieces contains a specific set of data such as Modeling, CAM, Simulation, etc.  The API refers to each of these pieces as a “Product”.  You can think of a product as a kind of container within the Fusion 360 document for a specific type of data.  To programmatically access a certain type of data you need to first access the Product that contains that type of data.  For example, to get at the design data created using the modeling or sculpting workspace commands you need to access the “Design” product within the document.  The Python code below demonstrates this.</p>
+
+<pre class="api-code">
+<span style="color:blue"># Get the application.</span>
+app = adsk.core.Application.get()
+
+<span style="color:blue"># Get the active document.</span>
+doc = app.activeDocument
+
+<span style="color:blue"># Get the products collection on the active document.</span>
+products = doc.products
+
+<span style="color:blue"># Get the Design product.</span>
+product = products.itemByProductType('DesignProductType')
+design = adsk.fusion.Design.cast(product)
+</pre>
+<br />
+
+<p Class="Normal">So, once you have the Design product, you can access the data types stored in it such as components, skethes, parameters, etc. via the methods and properties provided on the Design class, which is derived from the Product class.</p>
+
+<p Class="Normal">You can get the CAM product in a very similar manner, as demonstrated below.</p>
+
+<pre class="api-code">
+<span style="color:blue"># Get the application.</span>
+app = adsk.core.Application.get()
+
+<span style="color:blue"># Get the active document.</span>
+doc = app.activeDocument
+
+<span style="color:blue"># Get the products collection on the active document.</span>
+products = doc.products
+
+<span style="color:blue"># Get the CAM product.</span>
+product = products.itemByProductType('CAMProductType')
+
+<span style="color:blue"># Check if the document has a CAMProductType. It will not if there are no CAM operations in it.</span>
+if product == None:
+     ui.messageBox('There are no CAM operations in the active document')
+     return
+
+<span style="color:blue"># Cast the CAM product to a CAM object (a subtype of product).</span>
+cam = adsk.cam.CAM.cast(product)
+</pre>
+<br />
+<p Class="Normal">Notice that the code checks to see if the variable “product” is equal to None.  The itemByProductType method can return null or None in the case where no data of that type exists in the document.  In this case it indicates that the document does not contain any CAM operations.  It is important to note that all Fusion 360 documents contain a DesignProductType by default, but not necessarily any other product types.  Products for data types other than Design only exist in a document if the user has explicitly created data of that type.  For example, if no CAM setups or operations exist in a document, there will be no CAM product to reference.  Fusion 360 creates the Products of the different types in the document automatically when data of that product’s type is created via the commands in the associated workspace.</p>
+
+<h3 class="api">Accessing Setups, Operations, Folders and Patterns</h3>
+<p Class="Normal">Once you have a reference to the CAM object in a document, getting at the Setups and Operations it contains is fairly straightforward.  You can get at the existing Setups of a document by using the setups property on the CAM class, which returns the Setups collection. (i.e. setups = cam.setups)</p>
+
+<p Class="Normal">The API object model for CAM closely mirrors the structure you see in the CAM workspace browser, as shown below.  The document may contain one or more setups.  A setup may contain one or more operations, folders or patterns.  Folders and patterns (patterns are a type of folder) may contain one or more operations, folders and patterns, etc.</p>
+
+<div align="center"><img src="../images/CamBrowser.png" align="middle" alt="CAM Browser"></div>
+<br><br>
+ 
+<p Class="Normal">So, using the API, you’ll navigate the same structure that you see in the browser to access a specific CAM object. Below is a code snippet (again in Python) that shows how to access the first setup, along with its operations and folders, in a document like the one shown in the browser shown above.</p>
+
+<pre class="api-code">
+<span style="color:blue"># Get the Setups collection of all setups in the document.</span>
+setups = cam.setups
+
+<span style="color:blue"># Get the first setup in the document.</span>
+setup = setups.item(0)
+
+<span style="color:blue"># Get the operations collection of all operations in the firsts setup.</span>
+operations = setup.operations
+
+<span style="color:blue"># Get the first operation of the first setup.</span>
+operation = operations.item(0)
+
+<span style="color:blue"># Get the Folders collection of the first setup.</span>
+folders = setup.folders
+
+<span style="color:blue"># Get the first folder in the first setup.</span>
+folder = folders.item(0)
+
+<span style="color:blue"># Get the Operations collection from the first folder of the first setup.</span>
+folderOperations = folder.operations
+
+<span style="color:blue"># Get the first operation from the first folder in the first setup.</span>
+firstOperationInFolder = folderOperations.item(0)
+</pre>
+<br />
+
+<p Class="Normal">The code above uses the item method to get a setup, operation, and folder.  It’s using an index of 0 to get the first one in each case. It can also be very useful to use the itemByName method to be able to get one using its name, as illustrated below.</p>
+
+<pre class="api-code">
+<span style="color:blue"># Get the Setups collection of all setups in the document.</span>
+setups = cam.setups
+
+<span style="color:blue"># Get the setup named "Setup1".</span>
+setup = setups.itemByName('Setup1')
+
+<span style="color:blue"># Get the folder named "Folder1" within this setup.</span>
+folder = setup.folders.itemByName('Folder1')
+
+<span style="color:blue"># Get the operation named "Horizontal1" within the folder.</span>
+horizOperation = folder.operations.itemByName('Horizontal1')
+</pre>
+<br />
+
+<h3 class="api">Generating Toolpaths</h3>
+<p Class="Normal">The CAM class provides two different methods for generating toolpaths; “generateAllToolpaths” for generating all toolpaths in a document and “generateToolpath” for generating the toolpaths for a specific operation, collection of operations, or all the toolpaths of a specific setup, folder or pattern.</p>
+
+<p Class="Normal">Assuming you already have a reference to the CAM object you can generate all toolpaths in a document with the single line of Python code shown below.</p>
+
+<pre class="api-code">
+future = cam.generateAllToolpaths(False)
+</pre>
+<br />
+
+<p Class="Normal">The generateAllToolpaths method takes a single boolean argument to specify whether or not to skip valid toolpaths and only regenerate invalid toolpaths.</p>
+
+<p Class="Normal">Generating toolpaths is an asynchronous operation which means that the call to generate a toolpath will start the process but return control back to you while it continues to process in the background. The generateAllToolpaths and generateToolPath methods return a GenerateToolpathFuture object which you can use to check the current state of the of toolpath generation.  The GenerateToolpathFuture class provides properties for getting the number of operations involved, getting the number of completed toolpaths, and for determining if generation is complete or not.</p>
+
+<p Class="Normal">There is a CAM category in the set of <a href="SampleList.htm">sample programs</a> that are part in the API help and some of those demonstrate generating toolpaths.</p>
+
+<p Class="Normal">The Python code below demonstrates generating a toolpath for a single operation, a collection of operations, all the operations of a specific setup, or for a collection of setups.</p>
+
+<pre class="api-code">
+future = cam.generateToolpath(operation)
+
+future = cam.generateToolpath(collectionOfOperations)
+
+future = cam.generateToolpath(setup)
+
+future = cam.generateToolpath(collectionOfSetups)
+</pre>
+<br />
+
+<h3 class="api">Posting NC Files</h3>
+<p Class="Normal">The CAM class provides two different methods for posting NC files; postProcessAll for posting all toolpaths in a document and postProcess for posting the toolpaths for a specific operation, collection of operations, or all the toolpaths of a specific setup, folder or pattern.</p>
+
+<p Class="Normal">Assuming you already have a reference to the CAM object, the Python code below will post all the toolpaths in a document.</p>
+
+<pre class="api-code">
+<span style="color:blue"># Specify the program name.</span>
+programName = '101'
+
+<span style="color:blue"># Specify a destination folder.</span>
+outputFolder = 'C:/MyNcFolder'
+
+<span style="color:blue"># Specify a post configuration to use.</span>
+postConfig = cam.genericPostFolder + '/' + 'fanuc.cps'
+
+<span style="color:blue"># Specify the NC file output units.</span>
+units = adsk.cam.PostOutputUnitOptions.DocumentUnitsOutput
+
+<span style="color:blue"># Create the postInput object.</span>
+postInput = adsk.cam.PostProcessInput.create(programName, postConfig, outputFolder, units)
+
+<span style="color:blue"># Open the resulting NC file in the editor for viewing</span>
+postInput.isOpenInEditor = True
+
+<span style="color:blue"># Post all toolpaths in the document</span>
+cam.postProcessAll(postInput)
+</pre>
+<br />
+
+<p Class="Normal">To post an NC file for a single operation, a collection of operations, or for all the operations of a specific setup you can use the postProcess method.  Assuming you have a postInput already defined, the Python code below will post the toolpath for the first operation of the first setup in a document.</p>
+
+<pre class="api-code">
+setup = setups[0]
+operations = setup.allOperations
+operation = operations[0]
+if operation.hasToolpath == True:
+     cam.postProcess(operation, postInput)
+else:
+     ui.messageBox('Operation has no toolpath to post.')
+     return
+</pre>
+<br />
+
+<p Class="Normal">The CAM category in the <a href="SampleList.htm">API help</a> has some samples demonstrating posting NC files.
+</p>
+
+<h3 class="api">Generating Setup Sheets</h3>
+<p Class="Normal">The CAM class provides two different methods for generating setup sheets; generateAllSetupSheets for generating all setup sheets for all operations in a document and generateSetupSheet for generating the setup sheet(s) for a specific operation, collection of operations, or all the operations of a specific setup, folder or pattern.</p>
+
+<p Class="Normal">Assuming you already have a reference to the CAM object, the Python code below generates all setup sheets for all operations in a document.</p>
+
+<pre class="api-code">
+<span style="color:blue"># Specify the output folder and format for the setup sheets.</span>
+outputFolder = 'C:/MySetupSheetsFolder'
+
+<span style="color:blue"># Specify the sheet format. Note that .ExcelFormat is not supported on Mac.</span>
+sheetFormat = adsk.cam.SetupSheetFormats.HTMLFormat
+
+<span style="color:blue"># Generate setup sheets for all operations in the document and view the results.</span>
+cam.generateAllSetupSheets(sheetFormat, outputFolder, True)
+</pre>
+<br />
+
+<p Class="Normal">To generate the setup sheet(s) for a single operation, a collection of operations or for all the operations of a specific setup you use the generateSetupSheet method.  The Python code below will generate the setup sheet for the first operation of the first setup in a document.</p>
+
+<pre class="api-code">
+setups = cam.setups
+setup = setups[0]
+operations = setup.allOperations
+operation = operations[0]
+if operation.hasToolpath == True:
+     cam.generateSetupSheet(operation, sheetFormat, outputFolder, True)
+else:
+     ui.messageBox('This operation has no toolpath.')
+     return
+</pre>
+<br />
+
+<p Class="Normal">The CAM category in the <a href="SampleList.htm">API help</a> has some samples demonstrating generating setup files.
+</p>
+
+<h3 class="api">Activating the CAM Workspace</h3>
+<p Class="Normal">Although it is not necessary to activate the CAM workspace in the Fusion 360 UI for your CAM scripts to work, you may want to do it as a matter of convenience for the user at the beginning or end of a script so that the results of running the script (when/if necessary) can be viewed immediately in the CAM browser and graphics window.  The following Python code shows one possible way to do this.</p>
+
+<pre class="api-code">
+<span style="color:blue"># Prompt user with an option to switch to the CAM workspace if it's not already active.</span>
+if ui.activeWorkspace.name != 'CAM':
+     answer = ui.messageBox('Activate the CAM Workspace?','CAM Workspace Activate', adsk.core.MessageBoxButtonTypes.YesNoButtonType, adsk.core.MessageBoxIconTypes.QuestionIconType)
+if answer == adsk.core.DialogResults.DialogYes:
+     workspaces = ui.workspaces
+     for ws in workspaces:
+          if ws.name == 'CAM':
+              ws.activate()
+</pre>
+
+<br />
+<br />
+<div id="CopyrightNotice" style="display:none;">
+  <hr />
+  <table width="100%" style="font-size:15">
+	<tr>
+	  <td align="left">
+		&copy; Copyright 2017 Autodesk, Inc.
+	  </td>
+	  <td align="right">
+		<a href="mailto:mfg.api.help.comments@autodesk.com&subject=Fusion%20December 2017%20API%20Help%20(CAMIntroduction_UM)">Comment on this page.</a>
+	  </td>
+	</tr>
+  </table>
+</div>
+</body>
+</html>

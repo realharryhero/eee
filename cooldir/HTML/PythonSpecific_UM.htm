@@ -1,0 +1,291 @@
+ <html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta name="topic-type" content="reference-adsk">
+    <meta name="helpsystempath" content="/view/NINVFUS/ENU/">
+    <link rel="canonical" href="http://help.autodesk.com/cloudhelp/ENU/Fusion-360-API/files/PythonSpecific_UM.htm">
+    <meta name="product" content="NINVFUS">
+    <meta name="release" content="NA">
+    <meta name="book" content="Developer">
+    <meta name="component" content="Fusion-360-API">
+    <meta name="created" content="21/8/2014">
+    <meta name="user-comments" content="enable">
+    <meta name="description" content="">
+    <meta name="topicid" content="GUID-743C88FB-CA3F-44B0-B0B9-FCC378D0D782">
+    <meta name="experiencelevel" content="expert">
+    <meta name="audience" content="programmer">
+    <meta name="language" content="ENU">
+    <link rel="stylesheet" type="text/css" href="../Style/APIHelp-chm.css">
+	<link rel="stylesheet" type="text/css" href="/view/clientframework/client.css"/>
+    <title>Python Specific Issues</title>
+	<script type="text/javascript" src="/view/clientframework/client.js"><!--filler--></script> 
+	<script>
+	  // This turns on the display of the copyright notice which is not visible by default.
+	  // Because the head is removed when used in the web help, this function will only exists
+	  // when the chm help is being created.
+	  window.onload = function() {
+		copyrightElement = document.getElementById('CopyrightNotice');
+		copyrightElement.style.display = 'block';
+	  };
+	</script>
+</head>
+<body>
+<link rel="stylesheet" type="text/css" href="../Style/APIHelp.css">
+	
+<h2 class="api">Python Specific Issues</h2>
+
+<p Class="Normal">Fusion 360 has a single API that can be used from several different programming languages.  In most cases, the API is used in a very similar way from each of the programming languages with just small language specific syntax changes.  However, in some cases there are significant differences in how the API is used because of a particular language.  This topic discusses the differences that are unique to Python and covers the subjects listed below.</p>
+
+<ul>
+<li><a href="#Editing">Editing and Debugging</a></li>
+<li><a href="#Reference Arguments">Reference Arguments</a></li>
+<li><a href="#Working with Collections">Working with Collections</a></li>
+<li><a href="#Object Types">Object Types</a></li>
+<li><a href="#Object Equality">Object Equality</a></li>
+<li><a href="#CodeHints">Code Hints</a></li>
+<li><a href="#Additional Python Modules">Additional Python Modules</a></li>
+<li><a href="#Miscellaneous">Miscellaneous</a></li>
+</ul>
+
+<a name="Editing"></a>
+<h3 class="api">Editing and Debugging a Python Script or Add-In</h3>
+
+<p Class="Normal">When editing or debugging a Python script or add-in, the Spyder IDE (Integrated Development Environment) will be displayed. When you use the "Scripts and Add-Ins" command to create a new script or add-in, it contains code that gets the Fusion 360 Application object, uses the Application object to get a reference to the UserInterface object, and then displays a message box. The Spyder IDE and the Python code created for a new add-in can be seen below.  You can edit the code within the Spyder IDE.</p>
+
+<div align="center"><img src="../images/SpyderPythonSample.png" border=0 align="middle" alt="Scripts command"></div>
+<br />
+
+<p Class="Normal">An important feature of any development environment is the ability to debug your program. Debugging is also done through the Spyder IDE. There are two ways to begin debugging. First, if you don't already have the script or add-in open in Spyder you can run the <b>Scripts and Add-Ins</b> command, select the script or add-in in the dialog and then select "Debug" from the drop-down at the bottom-right of the dialog. This will open the script in Spyder and begin debugging with the script or add-in at a break point at the first line of the program. Second, if you already have the script open in Spyder. You can use the <b>Debug file</b> command in the toolbar as shown below which will start the debugging process.</p>
+
+<div align="center"><img src="../images/SpyderDebugFile.png" border=0 align="middle" alt="Scripts command"></div>
+<br />
+
+<p Class="Normal">If you’ve already been debugging this script, the dialog shown below will be displayed. Click “Yes” and continue with debugging.</p>
+
+<div align="center"><img src="../images/PythongDebuggingAlreadyRunning.png" border=0 align="middle" alt="Scripts command"></div>
+<br />
+
+<p Class="Normal">Once you've started debugging you can use the debug commands in the toolbar shown below to step through your code. Spyder supports the typical options to step through your code where can: 
+<ul>
+<li>Step line-by-line stepping over any function calls.</li>
+<li>Step into a function.</li>
+<li>Jumping out of the current function.</li>
+<li>Run until the next breakpoint is hit.</li>
+<li>Exit debugging.</li>
+</ul>
+</p>
+
+<div align="center"><img src="../images/SpyderDebuggingToolbar.png" border=0 align="middle" alt="Scripts command"></div>
+<br />
+
+<p Class="Normal">You can also add and remove breakpoints using the Debug menu or just use the F12 shortcut.</p>
+
+<p Class="Normal">While debugging, you can check the value of a variable using the Variable Inspector window, as shown below. You can also use the print function in the Console window to further examine variables. This is demonstrated below to see the value of the Occurrences.count property.</p>
+
+<div align="center"><img src="../images/SpyderViewVariables.png" border=0 align="middle" alt="Scripts command"></div>
+<br />
+
+<a name="Reference Arguments"></a>
+<h3 class="api">Reference Arguments</h3>
+
+<p Class="Normal">Python does not support output or 'by reference' arguments. For example, the Point3D.getData method is designed as:</p>
+
+<p Class="Normal">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;boolean Point3D.<b>getData</b>(  out double <b><i>x</i></b>, out double <b><i>y</i></b>, out double <b><i>z</i></b> ) </p>
+<p Class="Normal">The <b><i>x</i></b>, <b><i>y</i></b> and <b><i>z</i></b> arguments are of type 'out double' where 'out' indicates a 'by reference' argument. The documentation indicates that this argument will be used as an output argument containing the result.</p>
+
+<p Class="Normal">In Python, all function outputs are returned as the function's single return value, which for Python will be a tuple if there are any out arguments.  The first value in the tuple will always be the documented return value of the function.  The other values will be the out arguments in the same order as they are listed in the argument list.  The example below illustrates calling the Point3D.getData function and directly assigning the results into variables.</p>
+
+<pre class="api-code">
+(retVal, x, y, z) = point.getData()
+</pre>
+<br>
+
+<a name="Working with Collections"></a>
+<h3 class="api">Working with Collections</h3>
+
+<p Class="Normal">Fusion 360 collection objects are any object that supports the count property and item method, (and typically many other functions too).  The wrappers that are generated for collections for the Fusion 360 Python interface support the standard Python container iteration and length syntax so you can choose between the using count and item or the more Python friendly iterator. For example, instead of:</p>
+
+<pre class="api-code">
+for i in range(col.count):
+    item = col.item(i)
+    ...
+</pre>
+<br>
+
+<p Class="Normal">You can use this instead:</p>
+
+<pre class="api-code">
+for item in col:
+    ...
+</pre>
+<br>
+
+<p class="Normal">You can also use the len function so instead of <code>col.count</code> you can use <code>len(col)</code>.</p>
+
+<p class="Normal">For accessing a specific item within a collection you can use the Fusion 360 API provided item method or you can use the standard Python container accessor so instead of using <code>col.item(i)</code> you can use <code>col[i]</code>. In addition to this, because collections are using a standard Python container you can also use the container "slice" syntax to get a subset of items from a collection.  For example:
+
+<ul style="list-style-type:none">
+<pre class="api-code">
+<li>col[0]   <span style="color:green"># Get the first item in the container.</span></li>
+<li>col[-1]  <span style="color:green"># Get the last item in the container.</span></li>
+<li>col[:2]  <span style="color:green"># Get the first two items in the container as a list.</span></li>
+<li>col[-2:] <span style="color:green"># Get the last two items in the container as a list.</span></li>
+<li>col[1:4] <span style="color:green"># Get the second, third and fourth items in the container as a list.</span></li>
+</pre>
+</ul>
+</p>
+
+<a name="Object Types"></a>
+<h3 class="api">Object Types</h3>
+
+<p class="Normal">Python is not a strongly typed language.  However, you can find out what specific type an existing object is.  There are a couple of approaches.  First you can use the type() function to get the type of an object.</p>
+
+<pre class="api-code">
+<span style="color:green"># Get the currently selected entity.</span>
+selObj = app.activeSelection.item(0).object
+
+<span style="color:green"># Check to see if it's a sketch line.</span>
+if type(selObj) is adsk.fusion.SketchLine:
+    print( "SketchLine is selected." )
+</pre>
+<br/>
+
+<p class="Normal">The type() function returns the immediate type of an object but doesn’t work if you want of find out if an object is inherited from another object.  For example, <b>the code below doesn't work</b> and will never enter the if statement because all objects will be their specific type.</p>
+
+<pre class="api-code">
+<span style="color:green"># Get the currently selected entity.</span>
+selObj = app.activeSelection.item(0).object
+
+<span style="color:green"># Check to see if it's any type of sketch entity.</span>
+<span style="color:green"># This will never work because objects are a specific type.</span>
+if type(selObj) is adsk.fusion.SketchEntity:
+    print( "A sketch entity is selected." )
+</pre>
+<br/>
+
+<p class="Normal">A SketchLine is derived from SketchCurve, which is derived from SketchEntity, which is derived from core.Base.  If you have an object and want to see if it’s any type of sketch entity you can use the isinstance() function instead of type(), as shown below.</p>
+
+<pre class="api-code">
+<span style="color:green"># Get the currently selected entity.</span>
+selObj = app.activeSelection.item(0).object
+
+<span style="color:green"># Check to see if the entity is derived from SketchEntity.</span>
+if isinstance(selObj, adsk.fusion.SketchEntity):
+    print( "Is some kind of sketch curve." )
+</pre>
+<br/>
+
+<a name="Object Equality"></a>
+<h3 class="api">Object Equality</h3>
+<p class="Normal">It is common to need to compare whether two object variables are referencing the same Fusion 360 object.  In Python you can use the equality operator ‘==’.  The code below checks two variables to see if they reference the same face.</p>
+
+<pre class="api-code">
+<span style="color:green"># Compare the two variables to see if they reference the same face.</span>
+if face1 == face2:
+    print( "Faces are the same" )
+</pre>
+<br/>
+<p class="Normal">The Python "is" identity operator cannot be used to compare two Fusion 360 objects.  Instead you must use the equality operator as shown above.</p>
+
+<a name="CodeHints"></a>
+<h3 class="api">Code Hints</h3>
+<p class="Normal">Although Python is not a strongly typed language the IDE still attempts to figure out the type that a variable represents so it can show the appropriate code hints for that object.  For example, in the picture below, the IDE knows that the adsk.core.Application.get function returns an Application object so when I type the period after app, it shows the list of methods and properties supported by the Application object. The same is true if I use the ui variable because it knows it's referencing a UserInterface object.</p>
+
+<div align="center"><img src="../images/CodeHints1.png" border=0 align="middle" alt="Code Hints"></div>
+<br />
+
+<p class="Normal">The ability for the IDE to correctly handle code hints falls down when properties are typed to return a base class but actually returns one of the derived classes.  A common example of this is the use of the activeProduct property of the Application object.  This property is typed to return a Product object, but will always return a more specific object that is derived from Product.  When working with Fusion 360 it will return a Design object.  The picture below shows the code hints given, which are only the methods and properties supported by the Product object but it's most likely that you'll want to access the methods and properties that are specific to the Design object.  You can still write the code without using code hints and it will run just the same but having code hints can greatly improve your ability to use the API by quickly showing you what methods and properties an object supports and the arguments that a method requires.</p>
+
+<div align="center"><img src="../images/CodeHints2.png" border=0 align="middle" alt="Code Hints"></div>
+<br />
+
+<p class="Normal">Although it's not needed for the program to run, you can cast variables to a specific type so the IDE knows what that variable represents and can then show the appropriate code hints.  You do this in Python by using the static "cast" function.  This is used below to cast the variable to be a Design object and you can see that the code hints are now showing all of the methods and properties supported by the Design object.  The call of the cast function will return None in the case where the active product is not a design.</p>
+
+<div align="center"><img src="../images/CodeHints3.png" border=0 align="middle" alt="Code Hints"></div>
+<br />
+
+<p class="Normal">Another common example of where the IDE is unable to show code hints is when using the API to perform a selection.  For example, using the UserInterface.activeSelections property.  The actual object being selected is returned by the Selection.entity property which is typed to return a Base object, which is what all Fusion 360 objects are derived from and not very useful for code hints.  If you know the type of object that will be selected you can use the cast function to let the IDE know what type the variable is, as shown below.</p>
+
+<pre class="api-code">
+sels = app.userInterface.activeSelections
+
+<span style="color:green"># Cast the selection to an edge.</span>
+edge = adsk.fusion.BRepEdge.cast(sels[0].entity)
+if not edge:
+    ui.messageBox('An edge was not selected.')
+    return
+	
+<span style="color:green"># Now there will be good code hints for the variable "edge".</span>
+</pre>
+<br/>
+
+<a name="Additional Python Modules"></a>
+<h3 class="api">Additional Python Modules</h3>
+
+<p class="Normal">Many modules have been written for Python to expand its capabilities.  The Python provided with Fusion 360 includes only the core modules that come with a standard installation of Python.  However, you can use other modules by making them available to your Python program. Instead of installing or adding the module to sys.path we recommend that you have a local copy of the module for your script. To do this you install the Python module in the same directory as your script or a subdirectory.  The layout below is what's recommended where the script name in this case is "MyScript" and the name of the Python module is xlrd (a module that provides access to Microsoft Excel files).</p>
+
+<div align="center"><img src="../images/ModulePaths.png" border=0 align="middle" alt="Python Module Paths"></div>
+<br>
+
+<p class="Normal">To reference the module in your Python script you use the relative path syntax as shown below.</p>
+
+<pre class="api-code">
+from .Modules import xlrd
+</pre>
+<br />
+
+<a name="Miscellaneous"></a>
+<h3 class="api">Miscellaneous</h3>
+
+<p class="Normal">Python runs within the Fusion 360 process and also runs in the main Fusion 360 thread. Because of this, when your program is running must of Fusion 360 appears frozen because it never gets a chance to react to messages.  A common example of this is when your script or add-in is editing the model. Even though your program is successfully running and making the expected changes to the model, you don't see those changes until your program completes.  This is because the messages sent by the system to update the display are not able to be handled because the main thread is running the script or add-in. </p>
+
+<p class="Normal">In some cases this is actually desirable because less time is spent updating the graphics and the total time to execute the program is faster.  However, in other cases it's better if the user can watch the model being built as a way to make sure it's correct and because it also serves as a type of progress meter.  Another example of when this is needed is when you're manipulating the camera to fly around and through the model. Fusion 360 needs to be able to handle and react to the camera changed message to be able to update the display. The API supports a <b>doEvents</b> function which temporarily halts the execution of the add-in or script and gives Fusion 360 a chance to handle any queued up messages.  Below is an example script that creates 100 new instances of a selected component.  With the doEvents call you see each occurrence as it is added to the assembly.  Without it, the graphics don't update until the program finishes.</p>
+
+<pre class="api-code">
+def copyOccurrence():
+    ui = None
+    try:
+        app = adsk.core.Application.get()
+        ui = app.userInterface
+
+        occ = adsk.fusion.Occurrence.cast(ui.selectEntity('Select an occurrence', 'Occurrences').entity)
+        
+        if occ:
+            root = app.activeProduct.rootComponent
+
+            <span style="color:green"># Get the referenced component.</span>
+            comp = occ.component
+
+            <span style="color:green"># Create 100 occurrences offset 5 cm in the X direction from the selected occurrence.</span>
+            trans = occ.transform
+            offset = trans.getCell(0, 3)
+            for i in range(0, 100):
+                offset += 5
+                trans.setCell(0, 3, offset)
+                root.occurrences.addExistingComponent(comp, trans)
+
+                <span style="color:green"># Call doEvents to give Fusion 360 a chance to react.</span>
+                adsk.doEvents()
+    except:
+        if ui:
+            ui.messageBox('Failed:\n{}'.format(traceback.format_exc()))</pre>
+<br />
+<br />
+
+<br />
+<br />
+<div id="CopyrightNotice" style="display:none;">
+  <hr />
+  <table width="100%" style="font-size:15">
+	<tr>
+	  <td align="left">
+		&copy; Copyright 2017 Autodesk, Inc.
+	  </td>
+	  <td align="right">
+		<a href="mailto:mfg.api.help.comments@autodesk.com&subject=Fusion%20December 2017%20API%20Help%20(PythonSpecific_UM)">Comment on this page.</a>
+	  </td>
+	</tr>
+  </table>
+</div>
+</body>
+</html>

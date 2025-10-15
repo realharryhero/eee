@@ -1,0 +1,115 @@
+<html>
+  <head>
+    <META http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="topic-type" content="reference-adsk">
+    <meta name="helpsystempath" content="/view/NINVFUS/ENU/">
+    <link rel="canonical" href="http://help.autodesk.com/cloudhelp/ENU/Fusion-360-API/files/ConstantRadiusFilletEdgeSet.htm">
+    <meta name="product" content="NINVFUS">
+    <meta name="release" content="NA">
+    <meta name="book" content="Developer">
+    <meta name="component" content="Fusion-360-API">
+    <meta name="created" content="14/10/2014">
+    <meta name="user-comments" content="enable">
+    <meta name="description" content="ConstantRadiusFilletEdgeSet Object">
+    <meta name="topicid" content="GUID-ad99bdef-0061-4509-a700-fc70db2bdaa9">
+    <meta name="language" content="ENU">
+    <meta name="experiencelevel" content="expert">
+    <meta name="audience" content="programmer">
+    <title>ConstantRadiusFilletEdgeSet Object</title>
+    <link rel="stylesheet" type="text/css" href="../Style/APIHelp-chm.css">
+    <link rel="stylesheet" type="text/css" href="/view/clientframework/client.css"><script type="text/javascript" src="/view/clientframework/client.js"></script><script>
+          // This turns on the display of the copyright notice which is not visible by default.
+          // Because the head is removed when used in the web help, this function will only exists
+          // when the chm help is being created.
+          window.onload = function() {
+            copyrightElement = document.getElementById('CopyrightNotice');
+            copyrightElement.style.display = 'block';
+          };
+        </script></head>
+  <body>
+    <link rel="stylesheet" type="text/css" href="../Style/APIHelp.css">
+    <h1 class="api">ConstantRadiusFilletEdgeSet Object
+        </h1>
+              Derived from: <a href="FilletEdgeSet.htm">FilletEdgeSet</a> Object
+            <h2 class="api">
+          Description
+        </h2>Provides access to the edges and the parameter associated with a constant radius fillet.<br /><br />Defined in namespace "adsk.fusion" and the header file is "Fusion/Features/ConstantRadiusFilletEdgeSet.h".<h2 class="api">
+            Methods
+          </h2>
+    <Table class="api-list">
+      <tr class="header">
+        <td class="api-list" style="width:1%;">
+                Name
+              </td>
+        <td class="api-list">
+                Description
+              </td>
+      </tr>
+      <tr>
+        <td class="api-list"><a href="ConstantRadiusFilletEdgeSet_classType.htm">classType</a></td>
+        <td class="api-list">Static function that all classes support that returns the type of the class as a string.  The returned string matches the string returned by the objectType property. For example if you have a reference to an object and you want to check if it's a SketchLine you can use myObject.objectType == fusion.SketchLine.classType().</td>
+      </tr>
+    </Table>
+    <h2 class="api">
+            Properties
+          </h2>
+    <Table class="api-list">
+      <tr class="header">
+        <td class="api-list" style="width:1%;">
+                Name
+              </td>
+        <td class="api-list">
+                Description
+              </td>
+      </tr>
+      <tr>
+        <td class="api-list"><a href="ConstantRadiusFilletEdgeSet_edges.htm">edges</a></td>
+        <td class="api-list">Gets and sets the edges that will be filleted. In order to access (get) the input edges of a fillet, you must roll the timeline back to just before the fillet feature whose edges you want to access.</td>
+      </tr>
+      <tr>
+        <td class="api-list"><a href="ConstantRadiusFilletEdgeSet_isValid.htm">isValid</a></td>
+        <td class="api-list">Indicates if this object is still valid, i.e. hasn't been deleted or some other action done to invalidate the reference.</td>
+      </tr>
+      <tr>
+        <td class="api-list"><a href="ConstantRadiusFilletEdgeSet_objectType.htm">objectType</a></td>
+        <td class="api-list">Returns a string indicating the type of the object.</td>
+      </tr>
+      <tr>
+        <td class="api-list"><a href="ConstantRadiusFilletEdgeSet_radius.htm">radius</a></td>
+        <td class="api-list">Returns the model parameter that controls the radius of the fillet. You can edit the radius by using the properties on the returned ModelParameter object.</td>
+      </tr>
+    </Table>
+    <h2 class="api">
+            Samples
+          </h2>
+    <Table class="api-list">
+      <tr class="header">
+        <td class="api-list">
+                Name
+              </td>
+        <td class="api-list">
+                Description
+              </td>
+      </tr>
+      <tr>
+        <td class="api-list"><a href="FilletFeatureEditSample_Sample.htm">Fillet Feature Edit API Sample</a></td>
+        <td class="api-list">Demostrates editing a fillet feature.</td>
+      </tr>
+    </Table>
+    <h2 class="api">
+            Version
+          </h2>
+        Introduced in version November 2014<br><br><div id="CopyrightNotice" style="display:none;">
+      <hr>
+      <table width="100%" style="font-size:15">
+        <tr>
+          <td align="left">
+                © Copyright 2017 Autodesk, Inc.
+              </td>
+          <td align="right"><a href="mailto:mfg.api.help.comments@autodesk.com&subject=Fusion%20December 2017%20API%20Help%20(ConstantRadiusFilletEdgeSet%20Object%20Help%20Topic)">Comment on this page.</a></td>
+        </tr>
+      </table>
+    </div>
+  </body>
+</html>

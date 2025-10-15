@@ -1,0 +1,173 @@
+<html>
+  <head>
+    <META http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="topic-type" content="reference-adsk">
+    <meta name="helpsystempath" content="/view/NINVFUS/ENU/">
+    <link rel="canonical" href="http://help.autodesk.com/cloudhelp/ENU/Fusion-360-API/files/CreateAnimation_Sample.htm">
+    <meta name="product" content="NINVFUS">
+    <meta name="release" content="NA">
+    <meta name="book" content="Developer">
+    <meta name="component" content="Fusion-360-API">
+    <meta name="created" content="">
+    <meta name="user-comments" content="enable">
+    <meta name="description" content="Create Animation Sample">
+    <meta name="topicid" content="GUID-33127518-f20a-11e5-bab1-a0a8cd5c2c67">
+    <meta name="experiencelevel" content="expert">
+    <meta name="audience" content="programmer">
+    <meta name="language" content="ENU">
+    <title>Create Animation</title>
+    <link rel="stylesheet" href="../Style/jquery-ui.css"><script src="../Scripts/jquery-1.11.1.js"></script><script src="../Scripts/jquery-ui.js"></script><link rel="stylesheet" type="text/css" href="../Style/APIHelp-chm.css">
+    <link rel="stylesheet" type="text/css" href="/view/clientframework/client.css"><script type="text/javascript" src="/view/clientframework/client.js"></script><script>
+          // This turns on the display of the copyright notice which is not visible by default.
+          // Because the head is removed when used in the web help, this function will only exists
+          // when the chm help is being created.
+          window.onload = function() {
+          copyrightElement = document.getElementById('CopyrightNotice');
+          copyrightElement.style.display = 'block';
+          };
+        </script><script>
+          $(function() {
+          $( "#tabs" ).tabs();
+          });
+        </script></head>
+  <body>
+    <link rel="stylesheet" type="text/css" href="../Style/APIHelp.css">
+    <h1 class="api">Create Animation API Sample
+        </h1>
+    <h2 class="api">
+          Description
+        </h2>Creates a series of images of a design where a parameter is being changed. The series of images can be used to create an animation using other software.<h2 class="api">
+          Code Samples
+        </h2>
+    <div id="tabs">
+      <ul>
+        <li><a href="#Python">Python</a></li>
+        <li><a href="#C++">C++</a></li>
+      </ul>
+      <div id="Python" class="api-code">
+        <pre class="api-code">import adsk.core, adsk.fusion, traceback
+
+def run(context):
+    ui = None
+    try:
+        app = adsk.core.Application.get()
+        ui  = app.userInterface        
+        des = adsk.fusion.Design.cast(app.activeProduct)
+
+        paramName = 'Length'
+        startValue = 10
+        endValue = 15
+        increment = .1
+        resultFolder = 'C:/Temp/Animate/'
+        
+        param = des.allParameters.itemByName(paramName)
+        currentValue = startValue
+        param.value = currentValue
+        
+        cnt = 0
+        while param.value &lt; endValue:
+            param.value = currentValue
+            currentValue += increment
+            adsk.doEvents()
+            filename = resultFolder + "frame" + str(cnt).zfill(4)
+            app.activeViewport.saveAsImageFile(filename, 0, 0)                
+            cnt += 1
+            
+        ui.messageBox('Finished.')
+    except:
+        if ui:
+            ui.messageBox('Failed:\n{}'.format(traceback.format_exc()))</pre>
+      </div>
+      <div id="C++" class="api-code">
+        <pre class="api-code">#include &lt;Core/CoreAll.h&gt;
+#include &lt;Fusion/FusionAll.h&gt;
+#include &lt;iostream&gt;
+#include &lt;iomanip&gt; 
+#include &lt;sstream&gt;
+
+using namespace adsk::core;
+using namespace adsk::fusion;
+
+Ptr&lt;Application&gt; app;
+Ptr&lt;UserInterface&gt; ui;
+
+<span style="color:blue">// Function that pads the input number with leading zeros to get to the specified length.</span>
+std::string pad(int number, int length)
+{
+	std::stringstream ss;
+	ss &lt;&lt; std::setw(length) &lt;&lt; std::setfill('0') &lt;&lt; number;
+	return ss.str();
+}
+
+extern "C" XI_EXPORT bool run(const char* context)
+{
+	app = Application::get();
+	if (!app)
+		return false;
+
+	ui = app-&gt;userInterface();
+	if (!ui)
+		return false;
+
+	Ptr&lt;Design&gt; des = app-&gt;activeProduct();
+
+	std::string paramName = "Length";
+	double startValue = 10.0;
+	double endValue = 15.0;
+	double increment = 0.1;
+	std::string resultFolder = "C:/Temp/Animate/";
+
+	Ptr&lt;Parameter&gt; param = des-&gt;allParameters()-&gt;itemByName(paramName);
+	double currentValue = startValue;
+	param-&gt;value(currentValue);
+
+	int cnt = 0;
+	while (param-&gt;value() &lt; endValue)
+	{
+		param-&gt;value(currentValue);
+		adsk::doEvents();
+		currentValue += increment;
+		std::string filename = resultFolder + "frame" + pad(cnt, 4);
+		app-&gt;activeViewport()-&gt;saveAsImageFile(filename, 0, 0);
+		cnt += 1;
+	}
+
+	ui-&gt;messageBox("Finished.");
+
+	return true;
+}
+
+
+#ifdef XI_WIN
+
+#include &lt;windows.h&gt;
+
+BOOL APIENTRY DllMain(HMODULE hmodule, DWORD reason, LPVOID reserved)
+{
+	switch (reason)
+	{
+	case DLL_PROCESS_ATTACH:
+	case DLL_THREAD_ATTACH:
+	case DLL_THREAD_DETACH:
+	case DLL_PROCESS_DETACH:
+		break;
+	}
+	return TRUE;
+}
+
+#endif <span style="color:blue">// XI_WIN</span></pre>
+      </div>
+    </div><br><br><div id="CopyrightNotice" style="display:none;">
+      <hr>
+      <table width="100%" style="font-size:15">
+        <tr>
+          <td align="left">
+                © Copyright 2017 Autodesk, Inc.
+              </td>
+          <td align="right"><a href="mailto:mfg.api.help.comments@autodesk.com&subject=Fusion%20December 2017%20API%20Help%20(CreateAnimation%20Sample%20Help%20Topic)">Comment on this page.</a></td>
+        </tr>
+      </table>
+    </div>
+  </body>
+</html>

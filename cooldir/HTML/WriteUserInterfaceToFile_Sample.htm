@@ -1,0 +1,572 @@
+<html>
+  <head>
+    <META http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="topic-type" content="reference-adsk">
+    <meta name="helpsystempath" content="/view/NINVFUS/ENU/">
+    <link rel="canonical" href="http://help.autodesk.com/cloudhelp/ENU/Fusion-360-API/files/WriteUserInterfaceToFile_Sample.htm">
+    <meta name="product" content="NINVFUS">
+    <meta name="release" content="NA">
+    <meta name="book" content="Developer">
+    <meta name="component" content="Fusion-360-API">
+    <meta name="created" content="">
+    <meta name="user-comments" content="enable">
+    <meta name="description" content="Write user interface to a file Sample">
+    <meta name="topicid" content="GUID-d2b85a7e-fd08-11e4-9e07-3417ebd3d5be">
+    <meta name="experiencelevel" content="expert">
+    <meta name="audience" content="programmer">
+    <meta name="language" content="ENU">
+    <title>Write user interface to a file</title>
+    <link rel="stylesheet" href="../Style/jquery-ui.css"><script src="../Scripts/jquery-1.11.1.js"></script><script src="../Scripts/jquery-ui.js"></script><link rel="stylesheet" type="text/css" href="../Style/APIHelp-chm.css">
+    <link rel="stylesheet" type="text/css" href="/view/clientframework/client.css"><script type="text/javascript" src="/view/clientframework/client.js"></script><script>
+          // This turns on the display of the copyright notice which is not visible by default.
+          // Because the head is removed when used in the web help, this function will only exists
+          // when the chm help is being created.
+          window.onload = function() {
+          copyrightElement = document.getElementById('CopyrightNotice');
+          copyrightElement.style.display = 'block';
+          };
+        </script><script>
+          $(function() {
+          $( "#tabs" ).tabs();
+          });
+        </script></head>
+  <body>
+    <link rel="stylesheet" type="text/css" href="../Style/APIHelp.css">
+    <h1 class="api">Write user interface to a file API Sample
+        </h1>
+    <h2 class="api">
+          Description
+        </h2>Writes out all of the controls in the Fusion UI to a specified text file. This is very useful when positioning your controls within existing Fusion toolbars and panels and positioning your command adjacent to an existing command.<h2 class="api">
+          Code Samples
+        </h2>
+    <div id="tabs">
+      <ul>
+        <li><a href="#Python">Python</a></li>
+        <li><a href="#C++">C++</a></li>
+      </ul>
+      <div id="Python" class="api-code">
+        <pre class="api-code">import adsk.core, adsk.fusion, traceback
+
+def run(context):
+    ui = None
+    try:
+        app = adsk.core.Application.get()
+        ui  = app.userInterface
+        
+        dialogResult = ui.messageBox('Create a full report (list and control details) or \nminimal report (control list only)?', 'UI Report Type', adsk.core.MessageBoxButtonTypes.YesNoCancelButtonType, adsk.core.MessageBoxIconTypes.QuestionIconType) 
+        if dialogResult == adsk.core.DialogResults.DialogYes:            
+            fullReport = True
+        elif dialogResult == adsk.core.DialogResults.DialogNo:
+            fullReport = False
+        else:
+            return
+            
+        fileDialog = ui.createFileDialog()
+        fileDialog.isMultiSelectEnabled = False
+        fileDialog.title = "Specify result filename"
+        fileDialog.filter = 'Text files (*.txt)'
+        fileDialog.filterIndex = 0
+        dialogResult = fileDialog.showSave()
+        if dialogResult == adsk.core.DialogResults.DialogOK:
+            filename = fileDialog.filename
+        else:
+            return
+
+        qatToolbar = ui.toolbars.itemById('QAT')
+        print(qatToolbar.id)
+
+        <span style="color:blue"># Display the name of all of the existing toolbars.</span>
+        result = '** Toolbars (' + str(ui.toolbars.count) + ') **\n'
+        for toolbar in ui.toolbars:
+            msg = '   ' + toolbar.id + ' (' + str(toolbar.controls.count) + ')____\n'
+            result += msg
+            result = getControls(toolbar.controls, 2, fullReport, result)
+        
+        result += '\n\n** Toolbar Panels (' + str(ui.allToolbarPanels.count) + ')____\n'
+        for panel in ui.allToolbarPanels:
+            msg = '   ' + panel.id + ' (' + str(panel.controls.count) + ')____\n'
+            msg += '      Visible: ' + str(panel.isVisible) + '\n'
+            msg += '      Index: ' + str(panel.index) + '\n'
+            result += msg
+            result = getControls(panel.controls, 2, fullReport, result)
+
+        result += '\n\n** Workspaces  (' + str(ui.workspaces.count) + ')____\n'
+        for workspace in ui.workspaces:
+            if workspace.productType == '':
+                continue
+            msg = '   ' + workspace.id + ' (' + str(workspace.toolbarPanels.count) + ')____\n'
+            result += msg
+            for panel in workspace.toolbarPanels:
+                msg = '      ' + panel.id + '\n'
+                result += msg
+
+        output = open(filename, 'w')
+        output.writelines(result)
+        output.close()
+        
+        ui.messageBox('File written to "' + filename + '"')
+    except:
+        if ui:
+            ui.messageBox('Failed:\n{}'.format(traceback.format_exc()))
+            
+
+<span style="color:blue"># Function used to recursively traverse the controls.</span>
+def getControls(controls, level, fullReport, result):
+    for control in controls:
+        if control.objectType == adsk.core.SeparatorControl.classType():
+            msg = ((level*3)*' ') + '-Separator-\n' 
+            msg += (((level+1)*3)*' ') + 'Control ID: ' + control.id + '\n' 
+            msg += (((level+1)*3)*' ') + 'isVisible: ' + str(control.isVisible) + '\n' 
+            msg += (((level+1)*3)*' ') + 'index: ' + str(control.index) + '\n' 
+            result += msg
+        else:  
+            if control.objectType == adsk.core.CommandControl.classType():
+                msg = ((level*3)*' ') + 'Command Control____\n' 
+                msg += (((level+1)*3)*' ') + 'Control ID: ' + control.id + '\n' 
+                msg += (((level+1)*3)*' ') + 'isVisible: ' + str(control.isVisible) + '\n' 
+                msg += (((level+1)*3)*' ') + 'index: ' + str(control.index) + '\n' 
+
+                if fullReport:              
+                    try:
+                        msg += (((level+1)*3)*' ') + 'isPromoted: ' + str(control.isPromoted) + '\n' 
+                        msg += (((level+1)*3)*' ') + 'isPromotedByDefault: ' + str(control.isPromotedByDefault) + '\n' 
+                    except:
+                        <span style="color:blue"># Failed to get isPromoted so do nothing.</span>
+                        pass
+
+                    msg += (((level+1)*3)*' ') + 'Command Definition____\n' 
+                    try:
+                        commandDef = control.commandDefinition               
+    
+                        if commandDef:
+                            msg += (((level+2)*3)*' ') + 'Definition ID: ' + control.commandDefinition.id + '\n' 
+    
+                            msg += (((level+2)*3)*' ') + 'Control Definition____\n'
+                            
+                            controlDef = commandDef.controlDefinition
+                            msg += (((level+3)*3)*' ') + 'Name: ' + controlDef.name + '\n'
+                            msg += (((level+3)*3)*' ') + 'isEnabled: ' + str(controlDef.isEnabled) + '\n'                            
+                            msg += (((level+3)*3)*' ') + 'isVisible: ' + str(controlDef.isVisible) + '\n'                            
+                            
+                            if controlDef.objectType == adsk.core.ButtonControlDefinition.classType():
+                                msg += (((level+3)*3)*' ') + 'Type: ButtonControlDefinition\n'                            
+                            elif controlDef.objectType == adsk.core.CheckBoxControlDefinition.classType():
+                                msg += (((level+3)*3)*' ') + 'Type: CheckBoxControlDefinition\n'                            
+                                msg += (((level+3)*3)*' ') + 'isChecked: ' + str(controlDef.isChecked) + '\n'                            
+                            elif controlDef.objectType == adsk.core.ListControlDefinition.classType():
+                                msg += (((level+3)*3)*' ') + 'Type: ListControlDefinition\n'
+                                if controlDef.listControlDisplayType == adsk.core.ListControlDisplayTypes.CheckBoxListType:
+                                    displayType = 'Check box list'
+                                elif controlDef.listControlDisplayType == adsk.core.ListControlDisplayTypes.RadioButtonlistType:
+                                    displayType = 'Radio button list'
+                                elif controlDef.listControlDisplayType == adsk.core.ListControlDisplayTypes.StandardListType:
+                                    displayType = 'Standard list'
+                                msg += (((level+3)*3)*' ') + 'Displayed as: ' + displayType + '\n' 
+                                msg += (((level+3)*3)*' ') + 'lastSelected: ' + str(controlDef.lastSelected.name) + '\n'                             
+                                msg += (((level+3)*3)*' ') + 'List Items\n'
+                                for listItem in controlDef.listItems:
+                                    if listItem.isSeparator:
+                                        msg += (((level+4)*3)*' ') + '-Separator-\n'
+                                    else:
+                                        msg += (((level+4)*3)*' ') + 'name: ' + listItem.name + ', isSelected: ' + str(listItem.isSelected) + '\n'                                
+                                    
+                            else:
+                                msg += (((level+3)*3)*' ') + '**Unexpected type of control definition.\n'                            
+                    except:
+                        msg += (((level+2)*3)*' ') + 'Unable to get the associated CommandDefinition.\n' 
+
+                result += msg
+            elif control.objectType == adsk.core.DropDownControl.classType():
+                msg = ((level*3)*' ') + 'Drop Down Control (' + str(control.controls.count) + ')____\n'
+                msg += (((level+1)*3)*' ') + 'ID: ' + control.id + '\n'
+                result += msg
+                result = getControls(control.controls, level+1, fullReport, result)
+            elif control.objectType == adsk.core.SplitButtonControl.classType():
+                msg = ((level*3)*' ') + 'Split Button Control____\n'
+                msg += (((level+1)*3)*' ') + 'ID: ' + control.id + '\n'
+                msg += (((level+1)*3)*' ') + 'isVisible: ' + str(control.isVisible) + '\n' 
+
+                if fullReport:                           
+                    msg += (((level+1)*3)*' ') + 'isLastUsedShown: ' + str(control.isLastUsedShown) + '\n'                          
+                    msg += (((level+1)*3)*' ') + 'default Command: ' + control.defaultCommandDefinition.id + '\n'  
+                          
+                    msg += (((level+1)*3)*' ') + '+ Additional associated controls:\n'
+                    try:
+                        for cmdDef in control.additionalDefinitions:
+                            msg += (((level+2)*3)*' ') + cmdDef.id + '\n'
+                    except:
+                        result += msg
+                        continue
+                result += msg
+            else:
+                ctype = control.objectType.split('::')[2]
+                msg = ((level*3)*' ') + '*****' + control.id + ', type: ' + ctype + ', visible: ' + str(control.isVisible) + '\n'
+                result += msg
+
+    return result</pre>
+      </div>
+      <div id="C++" class="api-code">
+        <pre class="api-code">#include &lt;Core/Application/Application.h&gt;
+#include &lt;Core/UserInterface/UserInterface.h&gt;
+#include &lt;Core/UserInterface/FileDialog.h&gt;
+#include &lt;Core/UserInterface/Toolbars.h&gt;
+#include &lt;Core/UserInterface/Toolbar.h&gt;
+#include &lt;Core/UserInterface/ToolbarPanels.h&gt;
+#include &lt;Core/UserInterface/ToolbarPanelList.h&gt;
+#include &lt;Core/UserInterface/ToolbarPanel.h&gt;
+#include &lt;Core/UserInterface/Workspaces.h&gt;
+#include &lt;Core/UserInterface/Workspace.h&gt;
+#include &lt;Core/UserInterface/ToolbarControls.h&gt;
+#include &lt;Core/UserInterface/ToolbarControl.h&gt;
+#include &lt;Core/UserInterface/SeparatorControl.h&gt;
+#include &lt;Core/UserInterface/CommandControl.h&gt;
+#include &lt;Core/UserInterface/DropDownControl.h&gt;
+#include &lt;Core/UserInterface/SplitButtonControl.h&gt;
+#include &lt;Core/UserInterface/CommandDefinition.h&gt;
+#include &lt;Core/UserInterface/ControlDefinition.h&gt;
+#include &lt;Core/UserInterface/ButtonControlDefinition.h&gt;
+#include &lt;Core/UserInterface/CheckBoxControlDefinition.h&gt;
+#include &lt;Core/UserInterface/ListControlDefinition.h&gt;
+#include &lt;Core/UserInterface/ListItems.h&gt;
+#include &lt;Core/UserInterface/ListItem.h&gt;
+
+#include &lt;fstream&gt;
+
+using namespace adsk::core;
+using namespace std;
+
+Ptr&lt;UserInterface&gt; ui;
+
+string getControls(Ptr&lt;Application&gt; app, Ptr&lt;ToolbarControls&gt; controls, int level, bool fullReport, string result);
+
+extern "C" XI_EXPORT bool run(const char* context)
+{
+	Ptr&lt;Application&gt; app = Application::get();
+	if (!app)
+		return false;
+
+	ui = app-&gt;userInterface();
+	if (!ui)
+		return false;
+
+	DialogResults dialogResult = ui-&gt;messageBox("Create a full report (list and control details) or \nminimal report (control list only)?", "UI Report Type", MessageBoxButtonTypes::YesNoCancelButtonType, MessageBoxIconTypes::QuestionIconType);
+	bool fullReport = false;
+	if (DialogResults::DialogYes == dialogResult) 
+	{
+		fullReport = true;
+	}
+	else if (DialogResults::DialogNo == dialogResult)
+	{
+		fullReport = false;
+	}
+	else
+	{
+		return false;
+	}
+
+	Ptr&lt;FileDialog&gt; fileDialog = ui-&gt;createFileDialog();
+	if (!fileDialog)
+		return false;
+
+	fileDialog-&gt;isMultiSelectEnabled(false);
+	fileDialog-&gt;title("Specify result filename");
+	fileDialog-&gt;filter("Text files (*.txt)");
+	fileDialog-&gt;filterIndex(0);
+	dialogResult = fileDialog-&gt;showSave();
+	string filename;
+	if (DialogResults::DialogOK == dialogResult)
+	{
+		filename = fileDialog-&gt;filename();
+	}
+	else
+	{
+		return false;
+	}
+
+	Ptr&lt;Toolbars&gt; toolBars = ui-&gt;toolbars();
+	if (!toolBars)
+		return false;
+
+	Ptr&lt;Toolbar&gt; qatToolbar = toolBars-&gt;itemById("QAT");
+	if (!qatToolbar)
+		return false;
+
+	<span style="color:blue">// Display the name of all of the existing toolbars.</span>
+	string result = "** Toolbars (" + to_string(toolBars-&gt;count()) + ") **\r\n";
+	for (Ptr&lt;Toolbar&gt; toolBar : toolBars)
+	{
+		if (!toolBar)
+			continue;
+
+		Ptr&lt;ToolbarControls&gt; toolBarCtrls = toolBar-&gt;controls();
+		if (!toolBarCtrls)
+			continue;
+
+		string msg = "   " + toolBar-&gt;id() + " (" + to_string(toolBarCtrls-&gt;count()) + ")____\r\n";
+		result += msg;
+		result = getControls(app, toolBarCtrls, 2, fullReport, result);
+	}
+
+	Ptr&lt;ToolbarPanelList&gt; toolBarPanels = ui-&gt;allToolbarPanels();
+	if (!toolBarPanels)
+		return false;
+
+	result += "\r\n\r\n** Toolbar Panels (" + to_string(toolBarPanels-&gt;count()) + ")____\r\n";
+	for (Ptr&lt;ToolbarPanel&gt; toolBarPanel : toolBarPanels)
+	{
+		if (!toolBarPanel)
+			continue;
+
+		Ptr&lt;ToolbarControls&gt; toolBarCtrls = toolBarPanel-&gt;controls();
+		if (!toolBarCtrls)
+			continue;
+
+		string msg = "   " + toolBarPanel-&gt;id() + " (" + to_string(toolBarCtrls-&gt;count()) + ")____\r\n";
+		msg += string("      Visible: ") + (toolBarPanel-&gt;isVisible() ? "true" : "false") + "\r\n";
+		msg += "      Index: " + to_string(toolBarPanel-&gt;index()) + "\r\n";
+			result += msg;
+		result = getControls(app, toolBarCtrls, 2, fullReport, result);
+	}
+
+	Ptr&lt;Workspaces&gt; workspaces = ui-&gt;workspaces();
+	if (!workspaces)
+		return false;
+
+	result += "\r\n\r\n** Workspaces  (" + to_string(workspaces-&gt;count()) + ")____\r\n";
+	for (Ptr&lt;Workspace&gt; workspace : workspaces)
+	{
+		if (!workspace)
+			continue;
+
+		if (workspace-&gt;productType() == "")
+			continue;
+
+		Ptr&lt;ToolbarPanels&gt; panelsForWorkspace = workspace-&gt;toolbarPanels();
+		if (!panelsForWorkspace)
+			continue;
+
+		string msg = "   " + workspace-&gt;id() + " (" + to_string(panelsForWorkspace-&gt;count()) + ")____\r\n";
+		result += msg;
+		for (Ptr&lt;ToolbarPanel&gt; toolBarPanel : panelsForWorkspace)
+		{
+			string msg = "      " + toolBarPanel-&gt;id() + "\r\n";
+			result += msg;
+		}
+	}
+
+	ofstream filestrm(filename); 
+	filestrm &lt;&lt; result;
+	filestrm.close();
+	ui-&gt;messageBox("File written to \"" + filename + "\"");
+
+	return true;
+}
+
+<span style="color:blue">// Function used to recursively traverse the controls.</span>
+string getControls(Ptr&lt;Application&gt; app, Ptr&lt;ToolbarControls&gt; controls, int level, bool fullReport, string result) 
+{
+	string indentStr = "";
+	for (int i = 0; i &lt; level*3; ++i)
+		indentStr.append(" ");
+
+	for(Ptr&lt;ToolbarControl&gt; control : controls)
+	{
+		if (!control)
+			continue;
+
+		if (Ptr&lt;SeparatorControl&gt; separatorCtrl = control)
+		{
+			string msg = indentStr + "-Separator-\n"; 
+			msg += indentStr + "   " + "Control ID: " + control-&gt;id() + "\n"; 
+			msg += indentStr + "   " + "isVisible: " + (control-&gt;isVisible() ? "true" : "false") + "\n"; 
+			msg += indentStr + "   " + "index: " + to_string(control-&gt;index()) + "\n"; 
+			result += msg;
+		}
+		else
+		{
+			if (Ptr&lt;CommandControl&gt; cmdCtrl = control)
+			{
+				string msg = indentStr + "Command Control____\n"; 
+				msg += indentStr + "   " + "Control ID: " + control-&gt;id() + "\n"; 
+				msg += indentStr + "   " + "isVisible: " + (control-&gt;isVisible() ? "true" : "false") + "\n"; 
+				msg += indentStr + "   " + "index: " + to_string(control-&gt;index()) + "\n"; 
+
+				if (fullReport)
+				{
+					bool bPromoted = cmdCtrl-&gt;isPromoted();
+					if (app-&gt;getLastError() == 0)
+						msg += indentStr + "   " + "isPromoted: " + (bPromoted ? "true" : "false") + "\n"; 
+					bool bPromotedByDefault = cmdCtrl-&gt;isPromotedByDefault();
+					if (app-&gt;getLastError() == 0)
+						msg += indentStr + "   " + "isPromotedByDefault: " + (cmdCtrl-&gt;isPromotedByDefault() ? "true" : "false") + "\n"; 
+					msg += indentStr + "   " + "Command Definition____\n"; 
+					Ptr&lt;CommandDefinition&gt; commandDef = cmdCtrl-&gt;commandDefinition();
+					if (!commandDef)
+					{
+						msg += indentStr + "      " + "Unable to get the associated CommandDefinition.\n";
+						result += msg;
+						continue;
+					}
+
+					msg += indentStr + "      " + "Definition ID: " + commandDef-&gt;id() + "\n"; 
+
+					msg += indentStr + "      " + "Control Definition____\n";
+
+					Ptr&lt;ControlDefinition&gt; controlDef = commandDef-&gt;controlDefinition();
+					if (!controlDef)
+					{
+						msg += indentStr + "      " + "Unable to get the associated ControlDefinition.\n";
+						result += msg;
+						continue;
+					}
+
+					msg += indentStr + "         " + "Name: " + controlDef-&gt;name() + "\n";
+					msg += indentStr + "         " + "isEnabled: " + (controlDef-&gt;isEnabled() ? "true" : "false") + "\n";
+					msg += indentStr + "         " + "isVisible: " + (controlDef-&gt;isVisible() ? "true" : "false") + "\n";
+
+					if (Ptr&lt;ButtonControlDefinition&gt; buttonCtrlDef = controlDef)
+						msg += indentStr + "         " + "Type: ButtonControlDefinition\n";
+					else if (Ptr&lt;CheckBoxControlDefinition&gt; checkBoxCtrlDef = controlDef)
+					{
+						msg += indentStr + "         " + "Type: CheckBoxControlDefinition\n";
+						msg += indentStr + "         " + "isChecked: " + (checkBoxCtrlDef-&gt;isChecked() ? "true" : "false") + "\n";   
+					}
+					else if (Ptr&lt;ListControlDefinition&gt; listCtrlDef = controlDef)
+					{
+						msg += indentStr + "         " + "Type: ListControlDefinition\n";
+						string displayType;
+						if (listCtrlDef-&gt;listControlDisplayType() == ListControlDisplayTypes::CheckBoxListType)
+							displayType = "Check box list";
+						else if (listCtrlDef-&gt;listControlDisplayType() == ListControlDisplayTypes::RadioButtonlistType)
+							displayType = "Radio button list";
+						else if (listCtrlDef-&gt;listControlDisplayType() == ListControlDisplayTypes::StandardListType)
+							displayType = "Standard list";
+
+						msg += indentStr + "         " + "Displayed as: " + displayType + "\n"; 
+
+						Ptr&lt;ListItem&gt; lastSelectedItem = listCtrlDef-&gt;lastSelected();
+						if (!lastSelectedItem)
+						{
+							msg += indentStr + "      " + "Unable to get the active selected item.\n";
+							result += msg;
+							continue;
+						}
+
+						msg += indentStr + "         " + "lastSelected: " + lastSelectedItem-&gt;name() + "\n";                             
+						msg += indentStr + "         " + "List Items\n";
+
+						Ptr&lt;ListItems&gt; listItems = listCtrlDef-&gt;listItems();
+						if (!listItems)
+						{
+							msg += indentStr + "      " + "Unable to get the associated ListItems.\n";
+							result += msg;
+							continue;
+						}
+
+						for (Ptr&lt;ListItem&gt; listItem : listItems)
+						{
+							if (!listItem)
+								continue;
+
+							if (listItem-&gt;isSeparator())
+								msg += indentStr + "            " + "-Separator-\n";
+							else
+								msg += indentStr + "            " + "name: " + listItem-&gt;name() + ", isSelected: " + (listItem-&gt;isSelected() ? "true" : "false") + "\n"; 
+						}
+					}
+					else
+					{
+						msg += indentStr + "         " + "**Unexpected type of control definition.\n"; 
+					}
+				}
+				result += msg;
+			}
+			else if (Ptr&lt;DropDownControl&gt; dropDownCtrl = control)
+			{
+				Ptr&lt;ToolbarControls&gt; subCtrls = dropDownCtrl-&gt;controls();
+				if (!subCtrls)
+					continue;
+
+				string msg = indentStr + "Drop Down Control (" + to_string(subCtrls-&gt;count()) + ")____\n";
+				msg += indentStr + "   " + "ID: " + control-&gt;id() + "\n";
+				result += msg;
+				result = getControls(app, subCtrls, level+1, fullReport, result);
+			}
+			else if (Ptr&lt;SplitButtonControl&gt; splitButtonCtrl = control)
+			{
+				string msg = indentStr + "Split Button Control____\n";
+				msg += indentStr + "   " + "ID: " + control-&gt;id() + "\n";
+				msg += indentStr + "   " + "isVisible: " + (control-&gt;isVisible() ? "true" : "false") + "\n"; 
+
+				if (fullReport) 
+				{
+					msg += indentStr + "   " + "isLastUsedShown: " + (splitButtonCtrl-&gt;isLastUsedShown() ? "true" : "false") + "\n";
+					Ptr&lt;CommandDefinition&gt; defaultCmdDef = splitButtonCtrl-&gt;defaultCommandDefinition();
+					if (!defaultCmdDef)
+					{
+						result += msg;
+						continue;
+					}
+
+					msg += indentStr + "   " + "default Command: " + defaultCmdDef-&gt;id() + "\n";
+					msg += indentStr + "   " + "+ Additional associated controls:\n";
+					
+					vector&lt;Ptr&lt;CommandDefinition&gt; &gt; additionalDefs = splitButtonCtrl-&gt;additionalDefinitions();
+					for (Ptr&lt;CommandDefinition&gt; additionalDef : additionalDefs)
+					{
+						if (!additionalDef)
+							continue;
+						msg += indentStr + "      " + additionalDef-&gt;id() + "\n";
+					}
+				}
+				result += msg;
+			}
+			else
+			{
+				string ctype = control-&gt;objectType();
+				size_t nPos = ctype.rfind("::");
+				if (string::npos == nPos)
+					continue;
+				ctype = ctype.substr(nPos + 1, ctype.length() - 1 - nPos);
+				string msg = indentStr + "*****" + control-&gt;id() + ", type: " + ctype + ", visible: " + (control-&gt;isVisible() ? "true" : "false") + "\n";
+				result += msg;
+			}
+		}
+	}
+
+	return result;
+}
+
+#ifdef XI_WIN
+
+#include &lt;windows.h&gt;
+
+BOOL APIENTRY DllMain(HMODULE hmodule, DWORD reason, LPVOID reserved)
+{
+	switch (reason)
+	{
+	case DLL_PROCESS_ATTACH:
+	case DLL_THREAD_ATTACH:
+	case DLL_THREAD_DETACH:
+	case DLL_PROCESS_DETACH:
+		break;
+	}
+	return TRUE;
+}
+
+#endif <span style="color:blue">// XI_WIN</span></pre>
+      </div>
+    </div><br><br><div id="CopyrightNotice" style="display:none;">
+      <hr>
+      <table width="100%" style="font-size:15">
+        <tr>
+          <td align="left">
+                © Copyright 2017 Autodesk, Inc.
+              </td>
+          <td align="right"><a href="mailto:mfg.api.help.comments@autodesk.com&subject=Fusion%20December 2017%20API%20Help%20(WriteUserInterfaceToFile%20Sample%20Help%20Topic)">Comment on this page.</a></td>
+        </tr>
+      </table>
+    </div>
+  </body>
+</html>

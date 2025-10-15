@@ -1,0 +1,179 @@
+<html>
+  <head>
+    <META http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="topic-type" content="reference-adsk">
+    <meta name="helpsystempath" content="/view/NINVFUS/ENU/">
+    <link rel="canonical" href="http://help.autodesk.com/cloudhelp/ENU/Fusion-360-API/files/MaterialSample_Sample.htm">
+    <meta name="product" content="NINVFUS">
+    <meta name="release" content="NA">
+    <meta name="book" content="Developer">
+    <meta name="component" content="Fusion-360-API">
+    <meta name="created" content="">
+    <meta name="user-comments" content="enable">
+    <meta name="description" content="MaterialSample Sample">
+    <meta name="topicid" content="GUID-d00ba5c2-d3f0-11e6-bd5a-989096c57042">
+    <meta name="experiencelevel" content="expert">
+    <meta name="audience" content="programmer">
+    <meta name="language" content="ENU">
+    <title>MaterialSample</title>
+    <link rel="stylesheet" href="../Style/jquery-ui.css"><script src="../Scripts/jquery-1.11.1.js"></script><script src="../Scripts/jquery-ui.js"></script><link rel="stylesheet" type="text/css" href="../Style/APIHelp-chm.css">
+    <link rel="stylesheet" type="text/css" href="/view/clientframework/client.css"><script type="text/javascript" src="/view/clientframework/client.js"></script><script>
+          // This turns on the display of the copyright notice which is not visible by default.
+          // Because the head is removed when used in the web help, this function will only exists
+          // when the chm help is being created.
+          window.onload = function() {
+          copyrightElement = document.getElementById('CopyrightNotice');
+          copyrightElement.style.display = 'block';
+          };
+        </script><script>
+          $(function() {
+          $( "#tabs" ).tabs();
+          });
+        </script></head>
+  <body>
+    <link rel="stylesheet" type="text/css" href="../Style/APIHelp.css">
+    <h1 class="api">MaterialSample API Sample
+        </h1>
+    <h2 class="api">
+          Description
+        </h2>Demonstrates using materials and appearance using the API.<h2 class="api">
+          Code Samples
+        </h2>
+    <div id="tabs">
+      <ul>
+        <li><a href="#Python">Python</a></li>
+        <li><a href="#C++">C++</a></li>
+      </ul>
+      <div id="Python" class="api-code">
+        <pre class="api-code">import adsk.core, adsk.fusion, traceback
+
+def run(context):
+    ui = None
+    try:
+        app = adsk.core.Application.get()
+        ui = app.userInterface
+        
+        <span style="color:blue"># Open a document.</span>
+        TestUtils.openTestData("APISampleTwoCubes.f3d")
+        doc = app.activeDocument
+        
+        materialLibs = app.materialLibraries
+        
+        matLibPath = os.path.join(os.path.dirname(os.path.realpath(__file__)), '../../../../APISampleMaterialLibrary2.adsklib')
+        matLib = materialLibs.load(os.path.abspath(matLibPath))
+        bNative = matLib.isNative;
+        appear = matLib.appearances.item(1)
+
+        des = adsk.fusion.Design.cast(app.activeProduct)             
+        appear.copyTo(des)
+        favAppear = des.appearances.itemByName(appear.name)
+        
+        root = des.rootComponent
+        body2 = root.bRepBodies.item(1)
+        body2.appearance = favAppear
+        
+        if bNative == False:
+          matLib.unload();
+        
+    except:
+        if ui:
+            ui.messageBox('Failed:\n{}'.format(traceback.format_exc()))</pre>
+      </div>
+      <div id="C++" class="api-code">
+        <pre class="api-code">#include &lt;Core/CoreAll.h&gt;
+#include &lt;Fusion/FusionAll.h&gt;
+
+
+using namespace adsk::core;
+using namespace adsk::fusion;
+
+Ptr&lt;Application&gt; app;
+Ptr&lt;UserInterface&gt; ui;
+
+extern "C" XI_EXPORT bool run(const char* context)
+{
+	app = Application::get();
+	if (!app)
+		return false;
+
+	Ptr&lt;Document&gt; doc = app-&gt;activeDocument();
+	if (!doc)
+		return false;
+
+	Ptr&lt;Product&gt; product = app-&gt;activeProduct();
+	if (!product)
+		return false;
+
+	Ptr&lt;Design&gt; design = product;
+	if (!design)
+		return false;
+
+	Ptr&lt;MaterialLibraries&gt; matLibs = app-&gt;materialLibraries();
+	if (!matLibs)
+		return false;
+
+	std::string matLibPath = TestUtils::getDllPath() + "/../../../../APISampleMaterialLibrary3.adsklib";
+	Ptr&lt;MaterialLibrary&gt; matLib = matLibs-&gt;load(matLibPath);
+	if (!matLib)
+		return false;
+
+	Ptr&lt;Appearance&gt; appear = matLib-&gt;appearances()-&gt;item(1);
+	if (!appear)
+		return false;
+
+	appear-&gt;copyTo(design);
+	Ptr&lt;Appearance&gt; favAppear = design-&gt;appearances()-&gt;itemByName(appear-&gt;name());
+
+	<span style="color:blue">// Get the root component of the active design</span>
+	Ptr&lt;Component&gt; rootComp = design-&gt;rootComponent();
+	if (!rootComp)
+		return false;
+
+	Ptr&lt;BRepBody&gt; body2 = rootComp-&gt;bRepBodies()-&gt;item(1);
+	if (!body2)
+		return false;
+
+	body2-&gt;appearance(favAppear);
+
+
+	if (matLib-&gt;isNative() == false)
+	{
+		matLib-&gt;unload();
+	}
+
+	return true;
+}
+
+#ifdef XI_WIN
+
+#include &lt;windows.h&gt;
+
+BOOL APIENTRY DllMain(HMODULE hmodule, DWORD reason, LPVOID reserved)
+{
+	switch (reason)
+	{
+	case DLL_PROCESS_ATTACH:
+	case DLL_THREAD_ATTACH:
+	case DLL_THREAD_DETACH:
+	case DLL_PROCESS_DETACH:
+		break;
+	}
+	return TRUE;
+}
+
+#endif <span style="color:blue">// XI_WIN</span></pre>
+      </div>
+    </div><br><br><div id="CopyrightNotice" style="display:none;">
+      <hr>
+      <table width="100%" style="font-size:15">
+        <tr>
+          <td align="left">
+                © Copyright 2017 Autodesk, Inc.
+              </td>
+          <td align="right"><a href="mailto:mfg.api.help.comments@autodesk.com&subject=Fusion%20December 2017%20API%20Help%20(MaterialSample%20Sample%20Help%20Topic)">Comment on this page.</a></td>
+        </tr>
+      </table>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,344 @@
+<html>
+  <head>
+    <META http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="topic-type" content="reference-adsk">
+    <meta name="helpsystempath" content="/view/NINVFUS/ENU/">
+    <link rel="canonical" href="http://help.autodesk.com/cloudhelp/ENU/Fusion-360-API/files/PostToolpaths_Sample_Sample.htm">
+    <meta name="product" content="NINVFUS">
+    <meta name="release" content="NA">
+    <meta name="book" content="Developer">
+    <meta name="component" content="Fusion-360-API">
+    <meta name="created" content="">
+    <meta name="user-comments" content="enable">
+    <meta name="description" content="Post Toolpaths Sample">
+    <meta name="topicid" content="GUID-BF31EB56-B612-44C8-8F07-0C183036C803">
+    <meta name="experiencelevel" content="expert">
+    <meta name="audience" content="programmer">
+    <meta name="language" content="ENU">
+    <title>Post Toolpaths</title>
+    <link rel="stylesheet" href="../Style/jquery-ui.css"><script src="../Scripts/jquery-1.11.1.js"></script><script src="../Scripts/jquery-ui.js"></script><link rel="stylesheet" type="text/css" href="../Style/APIHelp-chm.css">
+    <link rel="stylesheet" type="text/css" href="/view/clientframework/client.css"><script type="text/javascript" src="/view/clientframework/client.js"></script><script>
+          // This turns on the display of the copyright notice which is not visible by default.
+          // Because the head is removed when used in the web help, this function will only exists
+          // when the chm help is being created.
+          window.onload = function() {
+          copyrightElement = document.getElementById('CopyrightNotice');
+          copyrightElement.style.display = 'block';
+          };
+        </script><script>
+          $(function() {
+          $( "#tabs" ).tabs();
+          });
+        </script></head>
+  <body>
+    <link rel="stylesheet" type="text/css" href="../Style/APIHelp.css">
+    <h1 class="api">Post Toolpaths API Sample
+        </h1>
+    <h2 class="api">
+          Description
+        </h2>Demonstrates posting toolpaths in the active document.<h2 class="api">
+          Code Samples
+        </h2>
+    <div id="tabs">
+      <ul>
+        <li><a href="#Python">Python</a></li>
+        <li><a href="#C++">C++</a></li>
+      </ul>
+      <div id="Python" class="api-code">
+        <pre class="api-code"><span style="color:blue"># For this sample script to run, the active Fusion document must contain at least one CAM operation.</span>
+
+import adsk.core, adsk.fusion, adsk.cam, traceback, os
+
+def run(context):
+    ui = None
+    try:
+        app = adsk.core.Application.get()
+        ui = app.userInterface
+        doc = app.activeDocument
+        products = doc.products
+        product = products.itemByProductType('CAMProductType')
+
+        <span style="color:blue"># check if the document has a CAMProductType.  I will not if there are no CAM operations in it.</span>
+        if product == None:
+            ui.messageBox('There are no CAM operations in the active document.  This script requires the active document to contain at least one CAM operation.',
+                            'No CAM Operations Exist',
+                            adsk.core.MessageBoxButtonTypes.OKButtonType,
+                            adsk.core.MessageBoxIconTypes.CriticalIconType)
+            return
+
+        cam = adsk.cam.CAM.cast(product)
+
+        <span style="color:blue"># specify the program name, post configuration to use and a folder destination for the nc file</span>
+        programName = '101'
+        outputFolder = cam.temporaryFolder
+
+        <span style="color:blue"># set the post configuration to use based on Operation Type of the first Setup</span>
+        firstSetupOperationType = cam.setups.item(0).operationType
+        if firstSetupOperationType == adsk.cam.OperationTypes.MillingOperation:
+            postConfig = os.path.join(cam.genericPostFolder, 'fanuc.cps') 
+        elif firstSetupOperationType == adsk.cam.OperationTypes.TurningOperation:
+            postConfig = os.path.join(cam.genericPostFolder, 'fanuc turning.cps') 
+        elif firstSetupOperationType == adsk.cam.OperationTypes.JetOperation:
+            postConfig = cam.genericPostFolder + '/' + 'omax.cps' 
+
+        <span style="color:blue"># prompt the user with an option to view the resulting NC file.</span>
+        viewResults = ui.messageBox('View results when post is complete?', 'Post NC Files',
+                                    adsk.core.MessageBoxButtonTypes.YesNoButtonType,
+                                    adsk.core.MessageBoxIconTypes.QuestionIconType)
+        if viewResults == adsk.core.DialogResults.DialogNo:
+            viewResult = False
+        else:
+            viewResult = True
+
+        <span style="color:blue"># specify the NC file output units</span>
+        units = adsk.cam.PostOutputUnitOptions.DocumentUnitsOutput
+<span style="color:blue">#        units = adsk.cam.PostOutputUnitOptions.InchesOutput</span>
+<span style="color:blue">#        units = adsk.cam.PostOutputUnitOptions.MillimetersOutput</span>
+
+        <span style="color:blue"># create the postInput object</span>
+        postInput = adsk.cam.PostProcessInput.create(programName, postConfig, outputFolder, units)
+        postInput.isOpenInEditor = viewResult
+
+        <span style="color:blue"># set the value of scenario to 1, 2 or 3 to post all, post the first setup, or post only the first operation of the first setup.</span>
+        scenario = 3
+        if scenario == 1:
+            ui.messageBox('All toolpaths will be posted')
+            cam.postProcessAll(postInput)
+        elif scenario == 2:
+            ui.messageBox('Toolpaths in the first Setup will be posted')
+            setups = cam.setups
+            setup = setups.item(0)
+            cam.postProcess(setup, postInput)
+        elif scenario == 3:
+            ui.messageBox('The first Toolpath in the first Setup will be posted')
+            setups = cam.setups
+            setup = setups.item(0)
+            operations = setup.allOperations
+            operation = operations.item(0)
+            if operation.hasToolpath == True:
+                cam.postProcess(operation, postInput)
+            else:
+                ui.messageBox('Operation has no toolpath to post')
+                return
+
+        ui.messageBox('Post processing is complete. The results have been written to:\n"' + os.path.join(outputFolder, programName) + '.nc"') 
+
+        <span style="color:blue"># open the output folder in Finder on Mac or in Explorer on Windows</span>
+        if (os.name == 'posix'):
+            os.system('open "%s"' % outputFolder)
+        elif (os.name == 'nt'):
+            os.startfile(outputFolder)
+
+        <span style="color:blue"># Prompt user with an option to switch to the CAM workspace if it's not already active</span>
+        if ui.activeWorkspace.name != 'CAM':
+            activateCAMWorkspace = ui.messageBox('Activate the CAM Workspace?','CAM Workspace Activate',
+                                                 adsk.core.MessageBoxButtonTypes.YesNoButtonType,
+                                                 adsk.core.MessageBoxIconTypes.QuestionIconType)
+
+            if activateCAMWorkspace == adsk.core.DialogResults.DialogYes:
+                camWorkspace = ui.workspaces.itemById("CAMEnvironment")
+                camWorkspace.activate()
+    except:
+        if ui:
+            ui.messageBox('Failed:\n{}'.format(traceback.format_exc()))</pre>
+      </div>
+      <div id="C++" class="api-code">
+        <pre class="api-code"><span style="color:blue">//////////////////////////////////////////////////////////////////////////</span>
+<span style="color:blue">// For this sample script to run, the active Fusion document must contain</span>
+<span style="color:blue">// at least one CAM operation.</span>
+<span style="color:blue">//////////////////////////////////////////////////////////////////////////</span>
+
+#include &lt;Core/CoreAll.h&gt;
+#include &lt;CAM/CAMAll.h&gt;
+
+#ifdef _WINDOWS
+    #include &lt;shlwapi.h&gt;
+#else
+    #include &lt;stdlib.h&gt;
+#endif
+
+using namespace adsk::core;
+using namespace adsk::cam;
+
+Ptr&lt;UserInterface&gt; ui;
+
+extern "C" XI_EXPORT bool run(const char* context)
+{
+    Ptr&lt;Application&gt; app = Application::get();
+    if (!app)
+        return false;
+
+    ui = app-&gt;userInterface();
+    if (!ui)
+        return false;
+
+    Ptr&lt;Document&gt; doc = app-&gt;activeDocument();
+    if (!doc)
+        return false;
+
+    Ptr&lt;Products&gt; products = doc-&gt;products();
+    if(!products)
+        return false;
+
+    <span style="color:blue">// Check if the document has a CAMProductType. It will return if there are no CAM operations in it.</span>
+    Ptr&lt;CAM&gt; camProduct = products-&gt;itemByProductType("CAMProductType");
+    if (!camProduct)
+    {
+        ui-&gt;messageBox("There are no CAM operations in the active document. This script requires the active document to contain at least one CAM operation.",
+                       "No CAM Operations Exist", MessageBoxButtonTypes::OKButtonType, MessageBoxIconTypes::CriticalIconType);
+        return false;
+    }
+
+    std::string outputFolder = camProduct-&gt;temporaryFolder();
+    std::string programName = "101";
+
+    <span style="color:blue">// Set the post configuration to use based on Operation Type of the first Setup</span>
+    Ptr&lt;Setups&gt; setups = camProduct-&gt;setups();
+    if (!setups)
+        return false;
+
+    Ptr&lt;Setup&gt; setup = setups-&gt;item(0);
+    if (!setup)
+        return false;
+
+    OperationTypes opType = setup-&gt;operationType();
+    std::string postConfig = camProduct-&gt;genericPostFolder();
+    switch (opType)
+    {
+        case adsk::cam::MillingOperation:
+            postConfig += "/fanuc.cps";
+            break;
+        case adsk::cam::TurningOperation:
+            postConfig += "/fanuc turning.cps";
+            break;
+        case adsk::cam::JetOperation:
+            postConfig += "/omax.cps";
+            break;
+        default:
+            postConfig += "/fanuc.cps";
+            break;
+    }
+
+    DialogResults dlgResults = ui-&gt;messageBox("View nc file when done?", "Post",
+                                              MessageBoxButtonTypes::YesNoButtonType, 
+                                              MessageBoxIconTypes::QuestionIconType);
+    bool viewResults = dlgResults == DialogResults::DialogNo ? false : true;
+
+    <span style="color:blue">// Specify the NC file output units.</span>
+    PostOutputUnitOptions units = adsk::cam::PostOutputUnitOptions::DocumentUnitsOutput;
+    <span style="color:blue">//PostOutputUnitOptions units = adsk::cam::PostOutputUnitOptions::MillimetersOutput;</span>
+    <span style="color:blue">//PostOutputUnitOptions units = adsk::cam::PostOutputUnitOptions::InchesOutput;</span>
+
+    <span style="color:blue">// Create the postInput object.</span>
+    Ptr&lt;PostProcessInput&gt; pstInput = PostProcessInput::create(programName, postConfig, outputFolder, units);
+    pstInput-&gt;isOpenInEditor(viewResults);
+
+    <span style="color:blue">// Set the value of scenario to 1, 2 or 3 to post all, post the first setup, or post only the first operation of the first setup.</span>
+    int scenario = 3;
+    switch (scenario)
+    {
+        case 1:
+            {
+                ui-&gt;messageBox("All toolpaths will be posted.");
+                camProduct-&gt;postProcessAll(pstInput);
+            }
+            break;
+        case 2:
+            {
+                ui-&gt;messageBox("Toolpaths in the first setup will be posted.");
+                camProduct-&gt;postProcess(setup, pstInput);
+            }
+            break;
+        case 3:
+            {
+                ui-&gt;messageBox("The first Toolpath in the first setup will be posted.");
+                <span style="color:blue">// It is a set of Operations, Folders and Patterns.</span>
+                Ptr&lt;ObjectCollection&gt; allOps = setup-&gt;allOperations();
+                if (!allOps)
+                    return false;
+
+                if (allOps-&gt;count() == 0)
+                {
+                    ui-&gt;messageBox("There is not any operation in the first setup!");
+                    return false;
+                }
+
+                <span style="color:blue">// Get the first operation.</span>
+                Ptr&lt;Operation&gt; operation = allOps-&gt;item(0);
+                if (!operation)
+                    return false;
+
+                if (operation-&gt;hasToolpath())
+                {
+                    camProduct-&gt;postProcess(operation, pstInput);
+                }
+                else
+                {
+                    ui-&gt;messageBox("This operation has no toolpath to post.");
+                    return false;
+                }
+            }
+            break;
+        default:
+            break;
+    }
+
+    <span style="color:blue">// Show output folder.</span>
+    ui-&gt;messageBox("Post processing is complete. The results have been written to:\n" + outputFolder + "/" + programName + ".nc");
+
+#ifdef _WINDOWS
+    ShellExecuteA(nullptr, "open", outputFolder.c_str(), nullptr, nullptr, SW_SHOWNORMAL);
+#else
+    std::string command = "open " + outputFolder;
+    system(command.c_str());
+#endif
+
+    <span style="color:blue">// Active CAM workspace if it is not the active one.</span>
+    if (ui-&gt;activeWorkspace()-&gt;name() != "CAM")
+    {
+        DialogResults result = ui-&gt;messageBox("Activate the CAM Workspace?", "CAM Workspace Activate",
+                                              MessageBoxButtonTypes::YesNoButtonType, MessageBoxIconTypes::QuestionIconType);
+        bool activeCAMWorkspace = result == DialogResults::DialogYes ? true : false;
+        if (activeCAMWorkspace)
+        {
+            Ptr&lt;Workspace&gt; camWorkspace = ui-&gt;workspaces()-&gt;itemById("CAMEnvironment");
+            camWorkspace-&gt;activate();
+        }
+    }
+    return true;
+}
+
+
+#ifdef XI_WIN
+
+#include &lt;windows.h&gt;
+
+BOOL APIENTRY DllMain(HMODULE hmodule, DWORD reason, LPVOID reserved)
+{
+	switch (reason)
+	{
+	case DLL_PROCESS_ATTACH:
+	case DLL_THREAD_ATTACH:
+	case DLL_THREAD_DETACH:
+	case DLL_PROCESS_DETACH:
+		break;
+	}
+	return TRUE;
+}
+
+#endif <span style="color:blue">// XI_WIN</span></pre>
+      </div>
+    </div><br><br><div id="CopyrightNotice" style="display:none;">
+      <hr>
+      <table width="100%" style="font-size:15">
+        <tr>
+          <td align="left">
+                © Copyright 2017 Autodesk, Inc.
+              </td>
+          <td align="right"><a href="mailto:mfg.api.help.comments@autodesk.com&subject=Fusion%20December 2017%20API%20Help%20(PostToolpaths_Sample%20Sample%20Help%20Topic)">Comment on this page.</a></td>
+        </tr>
+      </table>
+    </div>
+  </body>
+</html>

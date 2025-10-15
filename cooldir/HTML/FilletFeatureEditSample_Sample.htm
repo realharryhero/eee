@@ -1,0 +1,425 @@
+<html>
+  <head>
+    <META http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="topic-type" content="reference-adsk">
+    <meta name="helpsystempath" content="/view/NINVFUS/ENU/">
+    <link rel="canonical" href="http://help.autodesk.com/cloudhelp/ENU/Fusion-360-API/files/FilletFeatureEditSample_Sample.htm">
+    <meta name="product" content="NINVFUS">
+    <meta name="release" content="NA">
+    <meta name="book" content="Developer">
+    <meta name="component" content="Fusion-360-API">
+    <meta name="created" content="">
+    <meta name="user-comments" content="enable">
+    <meta name="description" content="Fillet Feature Edit API Sample Sample">
+    <meta name="topicid" content="GUID-a4dc7230-60f3-11e5-a4e9-989096c56ffe">
+    <meta name="experiencelevel" content="expert">
+    <meta name="audience" content="programmer">
+    <meta name="language" content="ENU">
+    <title>Fillet Feature Edit API Sample</title>
+    <link rel="stylesheet" href="../Style/jquery-ui.css"><script src="../Scripts/jquery-1.11.1.js"></script><script src="../Scripts/jquery-ui.js"></script><link rel="stylesheet" type="text/css" href="../Style/APIHelp-chm.css">
+    <link rel="stylesheet" type="text/css" href="/view/clientframework/client.css"><script type="text/javascript" src="/view/clientframework/client.js"></script><script>
+          // This turns on the display of the copyright notice which is not visible by default.
+          // Because the head is removed when used in the web help, this function will only exists
+          // when the chm help is being created.
+          window.onload = function() {
+          copyrightElement = document.getElementById('CopyrightNotice');
+          copyrightElement.style.display = 'block';
+          };
+        </script><script>
+          $(function() {
+          $( "#tabs" ).tabs();
+          });
+        </script></head>
+  <body>
+    <link rel="stylesheet" type="text/css" href="../Style/APIHelp.css">
+    <h1 class="api">Fillet Feature Edit API Sample API Sample
+        </h1>
+    <h2 class="api">
+          Description
+        </h2>Demostrates editing a fillet feature.<h2 class="api">
+          Code Samples
+        </h2>
+    <div id="tabs">
+      <ul>
+        <li><a href="#Python">Python</a></li>
+        <li><a href="#C++">C++</a></li>
+      </ul>
+      <div id="Python" class="api-code">
+        <pre class="api-code">import adsk.core, adsk.fusion, traceback
+
+def run(context):
+    ui = None
+    try:
+        app = adsk.core.Application.get()
+        ui  = app.userInterface
+
+        
+        <span style="color:blue"># Get active design</span>
+        product = app.activeProduct
+        design = adsk.fusion.Design.cast(product)
+ 
+        <span style="color:blue"># Get root component in this design</span>
+        rootComp = design.rootComponent
+        
+        <span style="color:blue"># Get fillet features</span>
+        fillets = rootComp.features.filletFeatures
+        
+        <span style="color:blue"># Get timeline</span>
+        timeline = design.timeline
+        
+        <span style="color:blue"># Edit command properties of fillet</span>
+        fillet1 = fillets.item(0)
+        
+        isG2 = fillet1.isG2
+        fillet1.timelineObject.rollTo(True)
+        fillet1.isG2 = not isG2
+        timeline.moveToEnd()
+        
+        isRollingBallCorner = fillet1.isRollingBallCorner
+        fillet1.timelineObject.rollTo(True)
+        fillet1.isRollingBallCorner = not isRollingBallCorner
+        timeline.moveToEnd()
+        
+        isTangentChain = fillet1.isTangentChain
+        fillet1.timelineObject.rollTo(True)
+        fillet1.isTangentChain = not isTangentChain
+        timeline.moveToEnd()
+        
+        <span style="color:blue"># Edit edge set of constant-radius fillet</span>
+        edgeSets1 = fillet1.edgeSets
+        for edgeSet in edgeSets1:
+            constantEdgeSet = adsk.fusion.ConstantRadiusFilletEdgeSet.cast(edgeSet)
+            radius = constantEdgeSet.radius
+            fillet1.timelineObject.rollTo(True)
+            radius.expression = "2.0 mm"
+            timeline.moveToEnd()
+            
+            fillet1.timelineObject.rollTo(True)
+            edges1 = constantEdgeSet.edges
+            newEdges1 = adsk.core.ObjectCollection.create()
+            newEdges1.add(edges1.item(0))
+            constantEdgeSet.edges = newEdges1
+            timeline.moveToEnd()
+        
+        <span style="color:blue"># Edit edge set of chord-length fillet</span>
+        fillet2 = fillets.item(1)
+        edgeSets2 = fillet2.edgeSets
+        for edgeSet in edgeSets2:
+            chordLengthEdgeSet = adsk.fusion.ChordLengthFilletEdgeSet.cast(edgeSet)
+            chordLength = chordLengthEdgeSet.chordLength
+            fillet2.timelineObject.rollTo(True)
+            chordLength.expression = "4.0 mm"
+            timeline.moveToEnd()
+            
+            fillet2.timelineObject.rollTo(True)
+            edges2 = chordLengthEdgeSet.edges
+            newEdges2 = adsk.core.ObjectCollection.create()
+            newEdges2.add(edges2.item(0))
+            chordLengthEdgeSet.edges = newEdges2
+            timeline.moveToEnd()            
+        
+        <span style="color:blue"># Edit edge set of variable-radius fillet</span>
+        fillet3 = fillets.item(2)
+        edgeSets3 = fillet3.edgeSets
+        for edgeSet in edgeSets3:
+            variableEdgeSet = adsk.fusion.VariableRadiusFilletEdgeSet.cast(edgeSet)
+            startRadius = variableEdgeSet.startRadius
+            endRadius = variableEdgeSet.endRadius
+            midPositions = variableEdgeSet.midPositions  
+            midRadii = variableEdgeSet.midRadii
+            fillet3.timelineObject.rollTo(True)
+            startRadius.expression = "2.0 mm"
+            endRadius.expression = "8.0 mm"
+            for j in range(0, midPositions.count):
+                midPositions.item(j).value = 0.2*(j+1)
+                midRadii.item(j).value = 0.3*(j+1)
+            timeline.moveToEnd() 
+            
+            fillet3.timelineObject.rollTo(True)
+            variableEdgeSet.deleteMidPosition(midPositions.count//2)
+            timeline.moveToEnd()
+            
+            newMidPosition = adsk.core.ValueInput.createByReal(0.5)
+            newMidRadius = adsk.core.ValueInput.createByString("5.0 mm")
+            fillet3.timelineObject.rollTo(True)
+            variableEdgeSet.addMidPosition(newMidPosition, newMidRadius)
+            timeline.moveToEnd()
+        
+
+    except:
+        if ui:
+            ui.messageBox('Failed:\n{}'.format(traceback.format_exc()))</pre>
+      </div>
+      <div id="C++" class="api-code">
+        <pre class="api-code">#include &lt;Core/Application/Application.h&gt;
+#include &lt;Core/UserInterface/UserInterface.h&gt;
+#include &lt;Core/Application/ObjectCollection.h&gt;
+#include &lt;Core/Application/ValueInput.h&gt;
+#include &lt;Core/Application/Document.h&gt;
+
+#include &lt;Fusion/Fusion/Design.h&gt;
+#include &lt;Fusion/Fusion/Timeline.h&gt;
+#include &lt;Fusion/Fusion/TimelineObject.h&gt;
+#include &lt;Fusion/Fusion/ModelParameter.h&gt;
+#include &lt;Fusion/Fusion/ParameterList.h&gt;
+#include &lt;Fusion/Components/Component.h&gt;
+#include &lt;Fusion/Features/Features.h&gt;
+#include &lt;Fusion/Features/FilletFeatures.h&gt;
+#include &lt;Fusion/Features/FilletFeature.h&gt;
+#include &lt;Fusion/Features/FilletFeatureInput.h&gt;
+#include &lt;Fusion/Features/FilletEdgeSets.h&gt;
+#include &lt;Fusion/Features/ConstantRadiusFilletEdgeSet.h&gt;
+#include &lt;Fusion/Features/VariableRadiusFilletEdgeSet.h&gt;
+#include &lt;Fusion/Features/ChordLengthFilletEdgeSet.h&gt;
+
+
+
+using namespace adsk::core;
+using namespace adsk::fusion;
+
+Ptr&lt;UserInterface&gt; ui;
+
+extern "C" XI_EXPORT bool run(const char* context)
+{
+	Ptr&lt;Application&gt; app = Application::get();
+	if (!app)
+		return false;
+
+	ui = app-&gt;userInterface();
+	if (!ui)
+		return false;
+
+
+	<span style="color:blue">// Get active design</span>
+	Ptr&lt;Product&gt; product = app-&gt;activeProduct();
+	if (!product)
+		return false;
+
+	Ptr&lt;Design&gt; design = product;
+	if (!design)
+		return false;
+
+	<span style="color:blue">// Get root component in this design</span>
+	Ptr&lt;Component&gt; rootComp = design-&gt;rootComponent();
+	if (!rootComp)
+		return false;
+
+	<span style="color:blue">// Get fillet features</span>
+	Ptr&lt;Features&gt; features = rootComp-&gt;features();
+	if (!features)
+		return false;
+
+	Ptr&lt;FilletFeatures&gt; fillets = features-&gt;filletFeatures();
+	if (!fillets)
+		return false;
+
+	<span style="color:blue">// Get timeline</span>
+	Ptr&lt;Timeline&gt; timeline = design-&gt;timeline();
+	if (!timeline)
+		return false;
+
+	<span style="color:blue">// Edit command properties of fillet</span>
+	Ptr&lt;FilletFeature&gt; fillet1 = fillets-&gt;item(0);
+	if (!fillet1)
+		return false;
+
+	Ptr&lt;TimelineObject&gt; timelineObj1 = fillet1-&gt;timelineObject();
+	if (!timelineObj1)
+		return false;
+
+	bool isG2 = fillet1-&gt;isG2();
+	timelineObj1-&gt;rollTo(true);
+	fillet1-&gt;isG2(!isG2);
+	timeline-&gt;moveToEnd();
+
+	bool isRollingBallCorner = fillet1-&gt;isRollingBallCorner();
+	timelineObj1-&gt;rollTo(true);
+	fillet1-&gt;isRollingBallCorner(!isRollingBallCorner);
+	timeline-&gt;moveToEnd();
+
+	bool isTangentChain = fillet1-&gt;isTangentChain();
+	timelineObj1-&gt;rollTo(true);
+	fillet1-&gt;isTangentChain(!isTangentChain);
+	timeline-&gt;moveToEnd();
+
+	<span style="color:blue">// Edit edge set of constant-radius fillet</span>
+	Ptr&lt;FilletEdgeSets&gt; edgeSets1 = fillet1-&gt;edgeSets();
+	if (!edgeSets1)
+		return false;
+
+	for (auto edgeSet : edgeSets1)
+	{
+		Ptr&lt;ConstantRadiusFilletEdgeSet&gt; constantEdgeSet = edgeSet;
+		if (!constantEdgeSet)
+			return false;
+
+		Ptr&lt;ModelParameter&gt; radius = constantEdgeSet-&gt;radius();
+		if (!radius)
+			return false;
+
+		timelineObj1-&gt;rollTo(true);
+		radius-&gt;expression("2.0 mm");
+		timeline-&gt;moveToEnd();
+
+		timelineObj1-&gt;rollTo(true);
+		Ptr&lt;ObjectCollection&gt; edges1 = constantEdgeSet-&gt;edges();
+		if (!edges1)
+			return false;
+
+		Ptr&lt;ObjectCollection&gt; newEdges1 = ObjectCollection::create();
+		if (!newEdges1)
+			return false;
+
+		newEdges1-&gt;add(edges1-&gt;item(0));
+		constantEdgeSet-&gt;edges(newEdges1);
+		timeline-&gt;moveToEnd();
+	}
+
+	<span style="color:blue">// Edit edge set of chord-length fillet</span>
+	Ptr&lt;FilletFeature&gt; fillet2 = fillets-&gt;item(1);
+	if (!fillet2)
+		return false;
+
+	Ptr&lt;TimelineObject&gt; timelineObj2 = fillet2-&gt;timelineObject();
+	if (!timelineObj2)
+		return false;
+
+	Ptr&lt;FilletEdgeSets&gt; edgeSets2 = fillet2-&gt;edgeSets();
+	if (!edgeSets2)
+		return false;
+
+	for (auto edgeSet : edgeSets2)
+	{
+		Ptr&lt;ChordLengthFilletEdgeSet&gt; chordLengthEdgeSet = edgeSet;
+		if (!chordLengthEdgeSet)
+			return false;
+
+		Ptr&lt;ModelParameter&gt; chordLength = chordLengthEdgeSet-&gt;chordLength();
+		if (!chordLength)
+			return false;
+
+		timelineObj2-&gt;rollTo(true);
+		chordLength-&gt;expression("4.0 mm");
+		timeline-&gt;moveToEnd();
+
+		timelineObj2-&gt;rollTo(true);
+		Ptr&lt;ObjectCollection&gt; edges2 = chordLengthEdgeSet-&gt;edges();
+		if (!edges2)
+			return false;
+
+		Ptr&lt;ObjectCollection&gt; newEdges2 = ObjectCollection::create();
+		if (!newEdges2)
+			return false;
+
+		newEdges2-&gt;add(edges2-&gt;item(0));
+		chordLengthEdgeSet-&gt;edges(newEdges2);
+		timeline-&gt;moveToEnd();
+	}
+
+	<span style="color:blue">// Edit edge set of variable-radius fillet</span>
+	Ptr&lt;FilletFeature&gt; fillet3 = fillets-&gt;item(2);
+	if (!fillet3)
+		return false;
+
+	Ptr&lt;TimelineObject&gt; timelineObj3 = fillet3-&gt;timelineObject();
+	if (!timelineObj3)
+		return false;
+
+	Ptr&lt;FilletEdgeSets&gt; edgeSets3 = fillet3-&gt;edgeSets();
+	if (!edgeSets3)
+		return false;
+
+	for (auto edgeSet : edgeSets3)
+	{
+		Ptr&lt;VariableRadiusFilletEdgeSet&gt; variableEdgeSet = edgeSet;
+		if (!variableEdgeSet)
+			return false;
+
+		Ptr&lt;ModelParameter&gt; startRadius = variableEdgeSet-&gt;startRadius();
+		if (!startRadius)
+			return false;
+
+		Ptr&lt;ModelParameter&gt; endRadius = variableEdgeSet-&gt;endRadius();
+		if (!endRadius)
+			return false;
+
+		Ptr&lt;ParameterList&gt; midPositions = variableEdgeSet-&gt;midPositions();
+		if (!midPositions)
+			return false;
+
+		Ptr&lt;ParameterList&gt; midRadii = variableEdgeSet-&gt;midRadii();
+		if (!midRadii)
+			return false;
+
+		timelineObj3-&gt;rollTo(true);
+		startRadius-&gt;expression("2.0 mm");
+		endRadius-&gt;expression("8.0 mm");
+		for (size_t j = 0; j &lt; midPositions-&gt;count(); ++j)
+		{
+			Ptr&lt;Parameter&gt; positionParam = midPositions-&gt;item(j);
+			if (!positionParam)
+				return false;
+			positionParam-&gt;value(0.2*(j+1));
+
+			Ptr&lt;Parameter&gt; radiusParam = midRadii-&gt;item(j);
+			if (!radiusParam)
+				return false;
+			radiusParam-&gt;value(0.3*(j+1));
+		}
+		timeline-&gt;moveToEnd(); 
+
+		timelineObj3-&gt;rollTo(true);
+		variableEdgeSet-&gt;deleteMidPosition(midPositions-&gt;count()/2);
+		timeline-&gt;moveToEnd();
+
+		Ptr&lt;ValueInput&gt; newMidPosition = ValueInput::createByReal(0.5);
+		if (!newMidPosition)
+			return false;
+
+		Ptr&lt;ValueInput&gt; newMidRadius = ValueInput::createByString("5.0 mm");
+		if (!newMidRadius)
+			return false;
+
+		timelineObj3-&gt;rollTo(true);
+		variableEdgeSet-&gt;addMidPosition(newMidPosition, newMidRadius);
+		timeline-&gt;moveToEnd();
+	}
+
+
+	return true;
+}
+
+
+#ifdef XI_WIN
+
+#include &lt;windows.h&gt;
+
+BOOL APIENTRY DllMain(HMODULE hmodule, DWORD reason, LPVOID reserved)
+{
+	switch (reason)
+	{
+	case DLL_PROCESS_ATTACH:
+	case DLL_THREAD_ATTACH:
+	case DLL_THREAD_DETACH:
+	case DLL_PROCESS_DETACH:
+		break;
+	}
+	return TRUE;
+}
+
+#endif <span style="color:blue">// XI_WIN</span></pre>
+      </div>
+    </div><br><br><div id="CopyrightNotice" style="display:none;">
+      <hr>
+      <table width="100%" style="font-size:15">
+        <tr>
+          <td align="left">
+                © Copyright 2017 Autodesk, Inc.
+              </td>
+          <td align="right"><a href="mailto:mfg.api.help.comments@autodesk.com&subject=Fusion%20December 2017%20API%20Help%20(FilletFeatureEditSample%20Sample%20Help%20Topic)">Comment on this page.</a></td>
+        </tr>
+      </table>
+    </div>
+  </body>
+</html>

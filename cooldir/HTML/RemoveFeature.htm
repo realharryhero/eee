@@ -1,0 +1,181 @@
+<html>
+  <head>
+    <META http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="topic-type" content="reference-adsk">
+    <meta name="helpsystempath" content="/view/NINVFUS/ENU/">
+    <link rel="canonical" href="http://help.autodesk.com/cloudhelp/ENU/Fusion-360-API/files/RemoveFeature.htm">
+    <meta name="product" content="NINVFUS">
+    <meta name="release" content="NA">
+    <meta name="book" content="Developer">
+    <meta name="component" content="Fusion-360-API">
+    <meta name="created" content="10/9/2015">
+    <meta name="user-comments" content="enable">
+    <meta name="description" content="RemoveFeature Object">
+    <meta name="topicid" content="GUID-3E674E88-7E74-451D-AFCA-78CD8E098EF6">
+    <meta name="language" content="ENU">
+    <meta name="experiencelevel" content="expert">
+    <meta name="audience" content="programmer">
+    <title>RemoveFeature Object</title>
+    <link rel="stylesheet" type="text/css" href="../Style/APIHelp-chm.css">
+    <link rel="stylesheet" type="text/css" href="/view/clientframework/client.css"><script type="text/javascript" src="/view/clientframework/client.js"></script><script>
+          // This turns on the display of the copyright notice which is not visible by default.
+          // Because the head is removed when used in the web help, this function will only exists
+          // when the chm help is being created.
+          window.onload = function() {
+            copyrightElement = document.getElementById('CopyrightNotice');
+            copyrightElement.style.display = 'block';
+          };
+        </script></head>
+  <body>
+    <link rel="stylesheet" type="text/css" href="../Style/APIHelp.css">
+    <h1 class="api">RemoveFeature Object
+        </h1>
+              Derived from: <a href="Feature.htm">Feature</a> Object
+            <h2 class="api">
+          Description
+        </h2>Object that represents an existing Remove feature in a design.<br /><br />Defined in namespace "adsk.fusion" and the header file is "Fusion/Features/RemoveFeature.h".<h2 class="api">
+            Methods
+          </h2>
+    <Table class="api-list">
+      <tr class="header">
+        <td class="api-list" style="width:1%;">
+                Name
+              </td>
+        <td class="api-list">
+                Description
+              </td>
+      </tr>
+      <tr>
+        <td class="api-list"><a href="RemoveFeature_classType.htm">classType</a></td>
+        <td class="api-list">Static function that all classes support that returns the type of the class as a string.  The returned string matches the string returned by the objectType property. For example if you have a reference to an object and you want to check if it's a SketchLine you can use myObject.objectType == fusion.SketchLine.classType().</td>
+      </tr>
+      <tr>
+        <td class="api-list"><a href="RemoveFeature_createForAssemblyContext.htm">createForAssemblyContext</a></td>
+        <td class="api-list">Creates or returns a proxy for the native object - i.e. a new object that represents this object but adds the assembly context defined by the input occurrence.</td>
+      </tr>
+      <tr>
+        <td class="api-list"><a href="RemoveFeature_deleteMe.htm">deleteMe</a></td>
+        <td class="api-list">Deletes the feature. This works for both parametric and non-parametric features.</td>
+      </tr>
+      <tr>
+        <td class="api-list"><a href="RemoveFeature_dissolve.htm">dissolve</a></td>
+        <td class="api-list">Dissolves the feature so that the feature information is lost and only the B-Rep geometry defined by the feature remains. This is only valid for non-parametric features.</td>
+      </tr>
+    </Table>
+    <h2 class="api">
+            Properties
+          </h2>
+    <Table class="api-list">
+      <tr class="header">
+        <td class="api-list" style="width:1%;">
+                Name
+              </td>
+        <td class="api-list">
+                Description
+              </td>
+      </tr>
+      <tr>
+        <td class="api-list"><a href="RemoveFeature_assemblyContext.htm">assemblyContext</a></td>
+        <td class="api-list">Returns the assembly occurrence (i.e. the occurrence) of this object in an assembly. This is only valid in the case where this is acting as a proxy in an assembly. Returns null in the case where the object is not in the context of an assembly but is already the native object.</td>
+      </tr>
+      <tr>
+        <td class="api-list"><a href="RemoveFeature_attributes.htm">attributes</a></td>
+        <td class="api-list">Returns the collection of attributes associated with this face.</td>
+      </tr>
+      <tr>
+        <td class="api-list"><a href="RemoveFeature_baseFeature.htm">baseFeature</a></td>
+        <td class="api-list">If this feature is associated with a base feature, this property will return that base feature. If it's not associated with a base feature, this property will return null.</td>
+      </tr>
+      <tr>
+        <td class="api-list"><a href="RemoveFeature_bodies.htm">bodies</a></td>
+        <td class="api-list">Returns the bodies that were modified or created by this feature.  This works for both parametric and non-parametric features. For a BaseFeature this returns the bodies that are owned by the base feature.</td>
+      </tr>
+      <tr>
+        <td class="api-list"><a href="RemoveFeature_errorOrWarningMessage.htm">errorOrWarningMessage</a></td>
+        <td class="api-list">Returns the error or warning message in the case where the healthState property returns either WarningFeatureHealthState or ErrorFeatureHealthState. Otherwise this property returns an empty string.</td>
+      </tr>
+      <tr>
+        <td class="api-list"><a href="RemoveFeature_faces.htm">faces</a></td>
+        <td class="api-list">Returns the faces that were created by this feature.  This works for both parametric and non-parametric features.</td>
+      </tr>
+      <tr>
+        <td class="api-list"><a href="RemoveFeature_healthState.htm">healthState</a></td>
+        <td class="api-list">Returns the current health state of the feature.</td>
+      </tr>
+      <tr>
+        <td class="api-list"><a href="RemoveFeature_isParametric.htm">isParametric</a></td>
+        <td class="api-list">Indicates if this feature is parametric or not.</td>
+      </tr>
+      <tr>
+        <td class="api-list"><a href="RemoveFeature_isSuppressed.htm">isSuppressed</a></td>
+        <td class="api-list">Gets and sets if this feature is suppressed. This is only valid for parametric features.</td>
+      </tr>
+      <tr>
+        <td class="api-list"><a href="RemoveFeature_isValid.htm">isValid</a></td>
+        <td class="api-list">Indicates if this object is still valid, i.e. hasn't been deleted or some other action done to invalidate the reference.</td>
+      </tr>
+      <tr>
+        <td class="api-list"><a href="RemoveFeature_itemToRemove.htm">itemToRemove</a></td>
+        <td class="api-list">Gets and sets the body or component occurrence to remove. In order to access (get) the item removed, you must roll the timeline back to just before the remove feature whose item you want to access.</td>
+      </tr>
+      <tr>
+        <td class="api-list"><a href="RemoveFeature_linkedFeatures.htm">linkedFeatures</a></td>
+        <td class="api-list">Returns the set of features that are linked to this feature. The set of linked features are all of the features that were created in various components as the result of a  single feature being created in the user interface.</td>
+      </tr>
+      <tr>
+        <td class="api-list"><a href="RemoveFeature_name.htm">name</a></td>
+        <td class="api-list">Returns the name of the feature as seen in the browser (non-parametric) or in the timeline (parametric).</td>
+      </tr>
+      <tr>
+        <td class="api-list"><a href="RemoveFeature_nativeObject.htm">nativeObject</a></td>
+        <td class="api-list">The NativeObject is the object outside the context of an assembly and in the context of it's parent component. Returns null in the case where this object is not in the context of  an assembly but is already the native object.</td>
+      </tr>
+      <tr>
+        <td class="api-list"><a href="RemoveFeature_objectType.htm">objectType</a></td>
+        <td class="api-list">Returns a string indicating the type of the object.</td>
+      </tr>
+      <tr>
+        <td class="api-list"><a href="RemoveFeature_parentComponent.htm">parentComponent</a></td>
+        <td class="api-list">Returns the parent component that owns this feature.</td>
+      </tr>
+      <tr>
+        <td class="api-list"><a href="RemoveFeature_timelineObject.htm">timelineObject</a></td>
+        <td class="api-list">Returns the timeline object associated with this feature.</td>
+      </tr>
+    </Table>
+    <h2 class="api">
+            Accessed From
+          </h2><a href="RemoveFeature_createForAssemblyContext.htm">RemoveFeature.createForAssemblyContext</a>, <a href="RemoveFeature_nativeObject.htm">RemoveFeature.nativeObject</a>, <a href="RemoveFeatures_add.htm">RemoveFeatures.add</a>, <a href="RemoveFeatures_item.htm">RemoveFeatures.item</a>, <a href="RemoveFeatures_itemByName.htm">RemoveFeatures.itemByName</a><h2 class="api">
+            Samples
+          </h2>
+    <Table class="api-list">
+      <tr class="header">
+        <td class="api-list">
+                Name
+              </td>
+        <td class="api-list">
+                Description
+              </td>
+      </tr>
+      <tr>
+        <td class="api-list"><a href="RemoveFeatureSample_Sample.htm">Remove Feature API Sample</a></td>
+        <td class="api-list">Demonstrates creating a new remove feature.</td>
+      </tr>
+    </Table>
+    <h2 class="api">
+            Version
+          </h2>
+        Introduced in version September 2015<br><br><div id="CopyrightNotice" style="display:none;">
+      <hr>
+      <table width="100%" style="font-size:15">
+        <tr>
+          <td align="left">
+                © Copyright 2017 Autodesk, Inc.
+              </td>
+          <td align="right"><a href="mailto:mfg.api.help.comments@autodesk.com&subject=Fusion%20December 2017%20API%20Help%20(RemoveFeature%20Object%20Help%20Topic)">Comment on this page.</a></td>
+        </tr>
+      </table>
+    </div>
+  </body>
+</html>

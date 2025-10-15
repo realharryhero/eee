@@ -1,0 +1,267 @@
+<html>
+  <head>
+    <META http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="topic-type" content="reference-adsk">
+    <meta name="helpsystempath" content="/view/NINVFUS/ENU/">
+    <link rel="canonical" href="http://help.autodesk.com/cloudhelp/ENU/Fusion-360-API/files/Command.htm">
+    <meta name="product" content="NINVFUS">
+    <meta name="release" content="NA">
+    <meta name="book" content="Developer">
+    <meta name="component" content="Fusion-360-API">
+    <meta name="created" content="19/8/2014">
+    <meta name="user-comments" content="enable">
+    <meta name="description" content="Command Object">
+    <meta name="topicid" content="GUID-0550963a-ff63-4183-b0a7-a1bf0c99f821">
+    <meta name="language" content="ENU">
+    <meta name="experiencelevel" content="expert">
+    <meta name="audience" content="programmer">
+    <title>Command Object</title>
+    <link rel="stylesheet" type="text/css" href="../Style/APIHelp-chm.css">
+    <link rel="stylesheet" type="text/css" href="/view/clientframework/client.css"><script type="text/javascript" src="/view/clientframework/client.js"></script><script>
+          // This turns on the display of the copyright notice which is not visible by default.
+          // Because the head is removed when used in the web help, this function will only exists
+          // when the chm help is being created.
+          window.onload = function() {
+            copyrightElement = document.getElementById('CopyrightNotice');
+            copyrightElement.style.display = 'block';
+          };
+        </script></head>
+  <body>
+    <link rel="stylesheet" type="text/css" href="../Style/APIHelp.css">
+    <h1 class="api">Command Object
+        </h1>
+              Derived from: <a href="Base.htm">Base</a> Object
+            <h2 class="api">
+          Description
+        </h2>The Command class contains all of the functionality needed by a command to gather various command input from a user, provide previews, and create the final result which is also encapsulated within a transaction so it can be undone.<br /><br />Defined in namespace "adsk.core" and the header file is "Core/UserInterface/Command.h".<h2 class="api">
+            Methods
+          </h2>
+    <Table class="api-list">
+      <tr class="header">
+        <td class="api-list" style="width:1%;">
+                Name
+              </td>
+        <td class="api-list">
+                Description
+              </td>
+      </tr>
+      <tr>
+        <td class="api-list"><a href="Command_classType.htm">classType</a></td>
+        <td class="api-list">Static function that all classes support that returns the type of the class as a string.  The returned string matches the string returned by the objectType property. For example if you have a reference to an object and you want to check if it's a SketchLine you can use myObject.objectType == fusion.SketchLine.classType().</td>
+      </tr>
+      <tr>
+        <td class="api-list"><a href="Command_doExecute.htm">doExecute</a></td>
+        <td class="api-list">Causes the execution of this command which results in the execute event being fired. This is the same effect as the user clicking the "OK" button in the command dialog and is most useful when there is no command dialog (no command inputs where created) and the isAutoExecute property has been set to False. This allows you to execute the command through code.</td>
+      </tr>
+      <tr>
+        <td class="api-list"><a href="Command_doExecutePreview.htm">doExecutePreview</a></td>
+        <td class="api-list">Causes the executePreview event of this command to be fired. This is most useful when there is no command dialog (no command inputs where created) and the isAutoExecute property has been set to False. This allows you to force the preview to be generated instead of relying on changing command inputs.</td>
+      </tr>
+      <tr>
+        <td class="api-list"><a href="Command_setDialogInitialSize.htm">setDialogInitialSize</a></td>
+        <td class="api-list">Sets the initial size of the dialog when it is first displayed. If this is not set, Fusion 360 will use a default size for the dialog.</td>
+      </tr>
+      <tr>
+        <td class="api-list"><a href="Command_setDialogMinimumSize.htm">setDialogMinimumSize</a></td>
+        <td class="api-list">Sets the minimum size for the dialog when resized to by the user. If this is not set, a default minimum size is used.</td>
+      </tr>
+    </Table>
+    <h2 class="api">
+            Properties
+          </h2>
+    <Table class="api-list">
+      <tr class="header">
+        <td class="api-list" style="width:1%;">
+                Name
+              </td>
+        <td class="api-list">
+                Description
+              </td>
+      </tr>
+      <tr>
+        <td class="api-list"><a href="Command_cancelButtonText.htm">cancelButtonText</a></td>
+        <td class="api-list">Gets and sets the text displayed on the Cancel button. The value of this property is ignored if the isCancelButtonVisible property is false.</td>
+      </tr>
+      <tr>
+        <td class="api-list"><a href="Command_commandInputs.htm">commandInputs</a></td>
+        <td class="api-list">Gets the associated CommandInputs object which provides the ability to create new command inputs and provides access to any existing inputs that have already been created for this command.</td>
+      </tr>
+      <tr>
+        <td class="api-list"><a href="Command_helpFile.htm">helpFile</a></td>
+        <td class="api-list"><p class='api'>Gets and sets the associated html help file for this command. If this is defined then the help button will be displayed in the lower-left corner of the command dialog and when clicked the help file will be displayed using the application defined by the operating system for that file type. For example if the helpfile references a .htm or .html file, the default browser will be invoked to display the file. If a .pdf file is used then whatever the default application is for viewing a pdf file will be invoked.</p>
+ <p class='api'>The file referenced must be a local file and cannot be a url. However, you can use a local html file that redirects to a url.</p> <pre class="api-code"><html>
+   &lt;head&gt;
+      &lt;meta http-equiv="refresh" content="0; url=http://example.com/" /&gt;
+   &lt;/head&gt;
+   &lt;body&gt;&lt;/body&gt;
+&lt;/html&gt;
+</pre> <p class='api'>The filename can be either a full path or a relative path with respect to the script or add-in  .py, .js, .dll, or .dylib file. If this is an empty string, (which is the default), then the  help button will not be displayed.</p></td>
+      </tr>
+      <tr>
+        <td class="api-list"><a href="Command_isAutoExecute.htm">isAutoExecute</a></td>
+        <td class="api-list">Gets and sets whether this command will automatically execute if no command inputs have been defined. If any command inputs have been created, the value of this property is ignored and the command dialog will be displayed and the command will execute when the user clicks 'OK'. if no command inputs have been defined and this is set to False, then the command will not execute but will remain running.
+ The default value for this property is true so that the command will execute if no command inputs have been defined.</td>
+      </tr>
+      <tr>
+        <td class="api-list"><a href="Command_isExecutedWhenPreEmpted.htm">isExecutedWhenPreEmpted</a></td>
+        <td class="api-list">Specifies what the behavior will be when a command is pre-empted by the user executing another command. If true (the default), and all of the current inputs are valid, the command will be  executed just the same as if the user clicked the OK button. If false, the command is terminated.</td>
+      </tr>
+      <tr>
+        <td class="api-list"><a href="Command_isOKButtonVisible.htm">isOKButtonVisible</a></td>
+        <td class="api-list">Specifies if the OK button is visible or not. If set to false then the OK button is removed and the "CANCEL" button text changes to "CLOSE". You can override the default button text using the cancelButtonText property.</td>
+      </tr>
+      <tr>
+        <td class="api-list"><a href="Command_isPositionDependent.htm">isPositionDependent</a></td>
+        <td class="api-list">When working in a parametric design in Fusion and you move any occurrences, those move operations are pending and aren't captured until you use the "Capture Position" command from the POSITION panel or use the "Revert" command from the same panel to move them all back to their original positions. If the design is in a pending situation and you run a command like "Create Sketch", a dialog appears asking if you want to capture the current position or not before continuing. This is because the creation of a sketch can be dependent on the current positions of occurrences in the design. Other comamnds, like "Fillet", depend directly on model geometry and do not rely on occurrence positions so running the Fillet command does not display the dialog and does not affect the pending state of the occurrences.
+ This property allows you to specify if your command is dependent on the current position of occurrences or not. One good way to know if your command is dependent or not is to run the commands in the UI that are  equivalent to the API functions you're using and see if the dialog that prompts to save or abort appears.  If it does, then you know your command is dependent on occurrence positions.
+ If this property is true, then the dialog will appear if there are any pending moved occurrences. The user can choose whether to capture the current changes or abort them, and then your command will continue.
+ If you set this property to false, (which is the default), then even if there are pending changes, the occurrences  are left in their current positions and your command will run.</td>
+      </tr>
+      <tr>
+        <td class="api-list"><a href="Command_isRepeatable.htm">isRepeatable</a></td>
+        <td class="api-list">Gets and Sets if this command is repeatable using the 'Repeat Last Command' option from the Fusion 360 marking menu.</td>
+      </tr>
+      <tr>
+        <td class="api-list"><a href="Command_isValid.htm">isValid</a></td>
+        <td class="api-list">Indicates if this object is still valid, i.e. hasn't been deleted or some other action done to invalidate the reference.</td>
+      </tr>
+      <tr>
+        <td class="api-list"><a href="Command_objectType.htm">objectType</a></td>
+        <td class="api-list">Returns a string indicating the type of the object.</td>
+      </tr>
+      <tr>
+        <td class="api-list"><a href="Command_okButtonText.htm">okButtonText</a></td>
+        <td class="api-list">Gets and sets the text displayed on the OK button. When the OK and Cancel buttons are displayed, this text defaults to "OK". If the Cancel button is not displayed the text defaults to "CLOSE".</td>
+      </tr>
+      <tr>
+        <td class="api-list"><a href="Command_parentCommandDefinition.htm">parentCommandDefinition</a></td>
+        <td class="api-list">Gets the parent CommandDefinition object.</td>
+      </tr>
+    </Table>
+    <h2 class="api">
+            Events
+          </h2>
+    <Table class="api-list">
+      <tr class="header">
+        <td class="api-list">
+                Name
+              </td>
+        <td class="api-list">
+                Description
+              </td>
+      </tr>
+      <tr>
+        <td class="api-list"><a href="Command_activate.htm">activate</a></td>
+        <td class="api-list">Gets an event that is fired when the command is first activated or re-activated after being suspended.</td>
+      </tr>
+      <tr>
+        <td class="api-list"><a href="Command_deactivate.htm">deactivate</a></td>
+        <td class="api-list">Gets an event that is fired when the command is deactivated. The command still exists and could still be activated again.</td>
+      </tr>
+      <tr>
+        <td class="api-list"><a href="Command_destroy.htm">destroy</a></td>
+        <td class="api-list">Gets an event that is fired when the command is destroyed. The command is destroyed and can be cleaned up.</td>
+      </tr>
+      <tr>
+        <td class="api-list"><a href="Command_execute.htm">execute</a></td>
+        <td class="api-list">Gets an event that is fired when the command has completed gathering the required input and now needs to perform whatever action the command does.</td>
+      </tr>
+      <tr>
+        <td class="api-list"><a href="Command_executePreview.htm">executePreview</a></td>
+        <td class="api-list">Gets an event that is fired when the command has completed gathering the required input and now needs to perform a preview.</td>
+      </tr>
+      <tr>
+        <td class="api-list"><a href="Command_inputChanged.htm">inputChanged</a></td>
+        <td class="api-list">Gets an event that is fired whenever an input value is changed.</td>
+      </tr>
+      <tr>
+        <td class="api-list"><a href="Command_keyDown.htm">keyDown</a></td>
+        <td class="api-list">Geta an event that is fired when a key on the keyboard is pressed down.</td>
+      </tr>
+      <tr>
+        <td class="api-list"><a href="Command_keyUp.htm">keyUp</a></td>
+        <td class="api-list">Gets an event that is fired when a key on the keyboard goes up.</td>
+      </tr>
+      <tr>
+        <td class="api-list"><a href="Command_mouseClick.htm">mouseClick</a></td>
+        <td class="api-list">Gets an event that is fired when the mouse is clicked, (a button is pressed and released).</td>
+      </tr>
+      <tr>
+        <td class="api-list"><a href="Command_mouseDoubleClick.htm">mouseDoubleClick</a></td>
+        <td class="api-list">Gets an event that is fired when the mouse is double-clicked, (clicked twice within the time specified by a system setting.)</td>
+      </tr>
+      <tr>
+        <td class="api-list"><a href="Command_mouseDown.htm">mouseDown</a></td>
+        <td class="api-list">Gets an event that is fired when a mouse button is pressed.</td>
+      </tr>
+      <tr>
+        <td class="api-list"><a href="Command_mouseDrag.htm">mouseDrag</a></td>
+        <td class="api-list">Gets an event that is fired when the mouse is in drag mode,  (being moved while a button is pressed).</td>
+      </tr>
+      <tr>
+        <td class="api-list"><a href="Command_mouseDragBegin.htm">mouseDragBegin</a></td>
+        <td class="api-list">Gets an event that is fired when a mouse drag starts,  (the mouse is pressed and moved).</td>
+      </tr>
+      <tr>
+        <td class="api-list"><a href="Command_mouseDragEnd.htm">mouseDragEnd</a></td>
+        <td class="api-list">Gets an event that is fired when the mouse button is released after a drag.</td>
+      </tr>
+      <tr>
+        <td class="api-list"><a href="Command_mouseMove.htm">mouseMove</a></td>
+        <td class="api-list">Gets an event that is fired when the mouse is moved.</td>
+      </tr>
+      <tr>
+        <td class="api-list"><a href="Command_mouseUp.htm">mouseUp</a></td>
+        <td class="api-list">Gets an event that is fired when a mouse button is released.</td>
+      </tr>
+      <tr>
+        <td class="api-list"><a href="Command_mouseWheel.htm">mouseWheel</a></td>
+        <td class="api-list">Gets an event that is fired when the mouse wheel is rotated.</td>
+      </tr>
+      <tr>
+        <td class="api-list"><a href="Command_selectionEvent.htm">selectionEvent</a></td>
+        <td class="api-list">Gets an event that is fired during the selection process. The event is fired as the user moves the mouse over the model but before anything is made selectable. The entity currently under the mouse is provided through the SelectionEventArgs and you can specify whether it is selectable or not. This provides a dynamic way of defining the selection filter.</td>
+      </tr>
+      <tr>
+        <td class="api-list"><a href="Command_validateInputs.htm">validateInputs</a></td>
+        <td class="api-list">Gets an event that is fired to allow you to check if the current state of the inputs are valid for execution.</td>
+      </tr>
+    </Table>
+    <h2 class="api">
+            Accessed From
+          </h2><a href="AngleValueCommandInput_parentCommand.htm">AngleValueCommandInput.parentCommand</a>, <a href="BoolValueCommandInput_parentCommand.htm">BoolValueCommandInput.parentCommand</a>, <a href="ButtonRowCommandInput_parentCommand.htm">ButtonRowCommandInput.parentCommand</a>, <a href="CommandCreatedEventArgs_command.htm">CommandCreatedEventArgs.command</a>, <a href="CommandEventArgs_command.htm">CommandEventArgs.command</a>, <a href="CommandInput_parentCommand.htm">CommandInput.parentCommand</a>, <a href="CommandInputs_command.htm">CommandInputs.command</a>, <a href="DirectionCommandInput_parentCommand.htm">DirectionCommandInput.parentCommand</a>, <a href="DistanceValueCommandInput_parentCommand.htm">DistanceValueCommandInput.parentCommand</a>, <a href="DropDownCommandInput_parentCommand.htm">DropDownCommandInput.parentCommand</a>, <a href="FloatSliderCommandInput_parentCommand.htm">FloatSliderCommandInput.parentCommand</a>, <a href="FloatSpinnerCommandInput_parentCommand.htm">FloatSpinnerCommandInput.parentCommand</a>, <a href="GroupCommandInput_parentCommand.htm">GroupCommandInput.parentCommand</a>, <a href="ImageCommandInput_parentCommand.htm">ImageCommandInput.parentCommand</a>, <a href="IntegerSliderCommandInput_parentCommand.htm">IntegerSliderCommandInput.parentCommand</a>, <a href="IntegerSpinnerCommandInput_parentCommand.htm">IntegerSpinnerCommandInput.parentCommand</a>, <a href="RadioButtonGroupCommandInput_parentCommand.htm">RadioButtonGroupCommandInput.parentCommand</a>, <a href="SelectionCommandInput_parentCommand.htm">SelectionCommandInput.parentCommand</a>, <a href="SliderCommandInput_parentCommand.htm">SliderCommandInput.parentCommand</a>, <a href="StringValueCommandInput_parentCommand.htm">StringValueCommandInput.parentCommand</a>, <a href="TabCommandInput_parentCommand.htm">TabCommandInput.parentCommand</a>, <a href="TableCommandInput_parentCommand.htm">TableCommandInput.parentCommand</a>, <a href="TextBoxCommandInput_parentCommand.htm">TextBoxCommandInput.parentCommand</a>, <a href="ValueCommandInput_parentCommand.htm">ValueCommandInput.parentCommand</a><h2 class="api">
+            Samples
+          </h2>
+    <Table class="api-list">
+      <tr class="header">
+        <td class="api-list">
+                Name
+              </td>
+        <td class="api-list">
+                Description
+              </td>
+      </tr>
+      <tr>
+        <td class="api-list"><a href="CommandInputsSample_Sample.htm">Command Inputs API Sample</a></td>
+        <td class="api-list"><p>Creates a command dialog that demonstrates all of the available command inputs.</p>
+
+<p>To use the sample, create a new Python or C++ script and copy and paste this code, replacing the default code.  You also need to unpack this zip file which contains a <a href="../images/CommandInputsResources.zip">resource folder</a> into the same folder where the source code file (.py or .cpp) is.</p></td>
+      </tr>
+    </Table>
+    <h2 class="api">
+            Version
+          </h2>
+        Introduced in version August 2014<br><br><div id="CopyrightNotice" style="display:none;">
+      <hr>
+      <table width="100%" style="font-size:15">
+        <tr>
+          <td align="left">
+                © Copyright 2017 Autodesk, Inc.
+              </td>
+          <td align="right"><a href="mailto:mfg.api.help.comments@autodesk.com&subject=Fusion%20December 2017%20API%20Help%20(Command%20Object%20Help%20Topic)">Comment on this page.</a></td>
+        </tr>
+      </table>
+    </div>
+  </body>
+</html>

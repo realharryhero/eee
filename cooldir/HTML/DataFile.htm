@@ -1,0 +1,184 @@
+<html>
+  <head>
+    <META http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="topic-type" content="reference-adsk">
+    <meta name="helpsystempath" content="/view/NINVFUS/ENU/">
+    <link rel="canonical" href="http://help.autodesk.com/cloudhelp/ENU/Fusion-360-API/files/DataFile.htm">
+    <meta name="product" content="NINVFUS">
+    <meta name="release" content="NA">
+    <meta name="book" content="Developer">
+    <meta name="component" content="Fusion-360-API">
+    <meta name="created" content="13/1/2015">
+    <meta name="user-comments" content="enable">
+    <meta name="description" content="DataFile Object">
+    <meta name="topicid" content="GUID-6e608b14-d5a4-4dee-bb4f-7a371c7fa50a">
+    <meta name="language" content="ENU">
+    <meta name="experiencelevel" content="expert">
+    <meta name="audience" content="programmer">
+    <title>DataFile Object</title>
+    <link rel="stylesheet" type="text/css" href="../Style/APIHelp-chm.css">
+    <link rel="stylesheet" type="text/css" href="/view/clientframework/client.css"><script type="text/javascript" src="/view/clientframework/client.js"></script><script>
+          // This turns on the display of the copyright notice which is not visible by default.
+          // Because the head is removed when used in the web help, this function will only exists
+          // when the chm help is being created.
+          window.onload = function() {
+            copyrightElement = document.getElementById('CopyrightNotice');
+            copyrightElement.style.display = 'block';
+          };
+        </script></head>
+  <body>
+    <link rel="stylesheet" type="text/css" href="../Style/APIHelp.css">
+    <h1 class="api">DataFile Object
+        </h1>
+              Derived from: <a href="Base.htm">Base</a> Object
+            <h2 class="api">
+          Description
+        </h2>A data file in a data folder.<br /><br />Defined in namespace "adsk.core" and the header file is "Core/Dashboard/DataFile.h".<h2 class="api">
+            Methods
+          </h2>
+    <Table class="api-list">
+      <tr class="header">
+        <td class="api-list" style="width:1%;">
+                Name
+              </td>
+        <td class="api-list">
+                Description
+              </td>
+      </tr>
+      <tr>
+        <td class="api-list"><a href="DataFile_classType.htm">classType</a></td>
+        <td class="api-list">Static function that all classes support that returns the type of the class as a string.  The returned string matches the string returned by the objectType property. For example if you have a reference to an object and you want to check if it's a SketchLine you can use myObject.objectType == fusion.SketchLine.classType().</td>
+      </tr>
+      <tr>
+        <td class="api-list"><a href="DataFile_copy.htm">copy</a></td>
+        <td class="api-list">Copies this DataFile to the specified folder.</td>
+      </tr>
+      <tr>
+        <td class="api-list"><a href="DataFile_deleteMe.htm">deleteMe</a></td>
+        <td class="api-list">Deletes this DataFile. This can fail if this file is referenced by another file or is currently open.</td>
+      </tr>
+      <tr>
+        <td class="api-list"><a href="DataFile_move.htm">move</a></td>
+        <td class="api-list">Moves this DataFile to the specified folder.</td>
+      </tr>
+      <tr>
+        <td class="api-list"><a href="DataFile_promote.htm">promote</a></td>
+        <td class="api-list">Promotes this version to be the latest version. If this is the latest version, nothing happens.</td>
+      </tr>
+    </Table>
+    <h2 class="api">
+            Properties
+          </h2>
+    <Table class="api-list">
+      <tr class="header">
+        <td class="api-list" style="width:1%;">
+                Name
+              </td>
+        <td class="api-list">
+                Description
+              </td>
+      </tr>
+      <tr>
+        <td class="api-list"><a href="DataFile_childReferences.htm">childReferences</a></td>
+        <td class="api-list">Returns a collection of DataFiles that are the children (referenced designs) this datafile references.</td>
+      </tr>
+      <tr>
+        <td class="api-list"><a href="DataFile_createdBy.htm">createdBy</a></td>
+        <td class="api-list">Returns the User that created this data file.</td>
+      </tr>
+      <tr>
+        <td class="api-list"><a href="DataFile_description.htm">description</a></td>
+        <td class="api-list">Gets and sets the description information associated with this item.</td>
+      </tr>
+      <tr>
+        <td class="api-list"><a href="DataFile_fileExtension.htm">fileExtension</a></td>
+        <td class="api-list">Gets the file extension for this data file. The file type can be inferred from this.</td>
+      </tr>
+      <tr>
+        <td class="api-list"><a href="DataFile_hasChildReferences.htm">hasChildReferences</a></td>
+        <td class="api-list">Gets if this datafile has children, (i.e. a Fusion 360 Design containing referenced components).</td>
+      </tr>
+      <tr>
+        <td class="api-list"><a href="DataFile_hasOutofDateChildReferences.htm">hasOutofDateChildReferences</a></td>
+        <td class="api-list">Gets if this datafile has Children (referenced components) that are out of date (not the latest version).</td>
+      </tr>
+      <tr>
+        <td class="api-list"><a href="DataFile_hasParentReferences.htm">hasParentReferences</a></td>
+        <td class="api-list">Gets if this datafile has parents, (i.e. this is a child being referenced in another Fusion 360 design).</td>
+      </tr>
+      <tr>
+        <td class="api-list"><a href="DataFile_id.htm">id</a></td>
+        <td class="api-list">Returns the unique ID for this DataFile. This is the same id used in the Forge Data Management API for an Item and is in the unencoded form and will look similar to this: "urn:adsk.wipprod:dm.lineage:hC6k4hndRWaeIVhIjvHu8w"</td>
+      </tr>
+      <tr>
+        <td class="api-list"><a href="DataFile_inUseBy.htm">inUseBy</a></td>
+        <td class="api-list">Returns the array of users that are currently using (have open for edit) this data file.</td>
+      </tr>
+      <tr>
+        <td class="api-list"><a href="DataFile_isInUse.htm">isInUse</a></td>
+        <td class="api-list">Gets if this DataFile is currently in use (opened for edit) by any other user.</td>
+      </tr>
+      <tr>
+        <td class="api-list"><a href="DataFile_isValid.htm">isValid</a></td>
+        <td class="api-list">Indicates if this object is still valid, i.e. hasn't been deleted or some other action done to invalidate the reference.</td>
+      </tr>
+      <tr>
+        <td class="api-list"><a href="DataFile_lastUpdatedBy.htm">lastUpdatedBy</a></td>
+        <td class="api-list">Returns the User that last updated this data file</td>
+      </tr>
+      <tr>
+        <td class="api-list"><a href="DataFile_latestVersion.htm">latestVersion</a></td>
+        <td class="api-list">Returns the latest version of the DataFile. It can return a reference to the same DataFile is this DataFile is the latest version.</td>
+      </tr>
+      <tr>
+        <td class="api-list"><a href="DataFile_latestVersionNumber.htm">latestVersionNumber</a></td>
+        <td class="api-list">Gets the latest version number for this DataFile.</td>
+      </tr>
+      <tr>
+        <td class="api-list"><a href="DataFile_name.htm">name</a></td>
+        <td class="api-list">Gets and sets the displayed name of this item.</td>
+      </tr>
+      <tr>
+        <td class="api-list"><a href="DataFile_objectType.htm">objectType</a></td>
+        <td class="api-list">Returns a string indicating the type of the object.</td>
+      </tr>
+      <tr>
+        <td class="api-list"><a href="DataFile_parentFolder.htm">parentFolder</a></td>
+        <td class="api-list">Returns the parent folder this item is contained within.</td>
+      </tr>
+      <tr>
+        <td class="api-list"><a href="DataFile_parentProject.htm">parentProject</a></td>
+        <td class="api-list">Returns the parent project that this item is in.</td>
+      </tr>
+      <tr>
+        <td class="api-list"><a href="DataFile_parentReferences.htm">parentReferences</a></td>
+        <td class="api-list">Returns a collection DataFiles collection that are the parents (designs that reference) this datafile.</td>
+      </tr>
+      <tr>
+        <td class="api-list"><a href="DataFile_versionNumber.htm">versionNumber</a></td>
+        <td class="api-list">Gets the version number of this DataFile.</td>
+      </tr>
+      <tr>
+        <td class="api-list"><a href="DataFile_versions.htm">versions</a></td>
+        <td class="api-list">Gets the other version of this item.</td>
+      </tr>
+    </Table>
+    <h2 class="api">
+            Accessed From
+          </h2><a href="DataFile_copy.htm">DataFile.copy</a>, <a href="DataFile_latestVersion.htm">DataFile.latestVersion</a>, <a href="DataFileFuture_dataFile.htm">DataFileFuture.dataFile</a>, <a href="DataFiles_item.htm">DataFiles.item</a>, <a href="Document_dataFile.htm">Document.dataFile</a>, <a href="DocumentReference_dataFile.htm">DocumentReference.dataFile</a>, <a href="FusionDocument_dataFile.htm">FusionDocument.dataFile</a><h2 class="api">
+            Version
+          </h2>
+        Introduced in version January 2015<br><br><div id="CopyrightNotice" style="display:none;">
+      <hr>
+      <table width="100%" style="font-size:15">
+        <tr>
+          <td align="left">
+                © Copyright 2017 Autodesk, Inc.
+              </td>
+          <td align="right"><a href="mailto:mfg.api.help.comments@autodesk.com&subject=Fusion%20December 2017%20API%20Help%20(DataFile%20Object%20Help%20Topic)">Comment on this page.</a></td>
+        </tr>
+      </table>
+    </div>
+  </body>
+</html>
